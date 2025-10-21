@@ -22,11 +22,14 @@ app.use('/uploads', express.static(path.join(__dirname, 'data', 'uploads')));
 
 // Routes
 // test and seeder
-app.get('/', (req, res) => { res.json({ message: 'API works!' }); });
+app.get('/', (req, res) => { res.json({ message: 'Server works fine!' }); });
 const databaseSeeder = require('./databaseSeeder.js');
-app.use('/server/seed', databaseSeeder);
+app.use('/api/seed', databaseSeeder);
 // api routes
-
+const userRoutes = require("./routes/userRoutes.js")
+app.use('/api/user', userRoutes);
+const articleRoutes = require("./routes/articleRoutes.js")
+app.use('/api/article', articleRoutes);
 
 
 // Setup and Run Server
