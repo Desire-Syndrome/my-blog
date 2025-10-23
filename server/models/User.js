@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
   isConfirmed: { type: Boolean, default: false }, 
   confirmationToken: { type: String }, 
 	image: { type: String }
-});
+}, { timestamps: true, versionKey: false });
 
 
 // compare passwords
