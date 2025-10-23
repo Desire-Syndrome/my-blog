@@ -11,7 +11,7 @@ const { upload } = require('../middleware/multer.js');
 
 router.post('/registration', upload.fields([{ name: 'avatar', maxCount: 1}]), userRegistration);
 router.post('/login', userLogin);
-router.post('/verify/:token', userVerify);
+router.get('/verify/:token', userVerify);
 
 router.put('/profile', protect, upload.fields([{ name: 'avatar', maxCount: 1 }]), updateUser);
 router.delete('/profile', protect, deleteUser);
