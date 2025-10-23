@@ -13,8 +13,8 @@ router.get('/', getArticles);
 router.get('/:id', getArticle);
 router.get('/user/:id', getUserArticles);
 
-router.post('/', protect, upload.fields([{ name: 'article', maxCount: 1}]), postArticle);
-router.put('/:id', protect, upload.fields([{ name: 'article', maxCount: 1}]), updateArticle);
+router.post('/', protect, upload.fields([{ name: 'articleImage', maxCount: 1}]), postArticle);
+router.put('/:id', protect, upload.fields([{ name: 'articleImage', maxCount: 1}]), updateArticle);
 router.delete('/:id', protect, deleteArticle);
 
 router.post('/:id/reviews', protect, postReview);
