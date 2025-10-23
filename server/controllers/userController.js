@@ -8,7 +8,6 @@ const { sendConfirmationEmail } = require('../middleware/emailService');
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/User.js");
-const Article = require("../models/Article.js");
 
 
 const userRegistration = AsyncHandler(async (req, res) => {
@@ -99,8 +98,10 @@ const userVerify = AsyncHandler(async (req, res) => {
 
 
 const updateUser = AsyncHandler(async (req, res) => {
+  const { id } = req.account._id;
   const { name, email, oldPassword, newPassword } = req.body;
-  const user = await User.findById(req.account._id);
+
+  const user = await User.findById(id);
 
   if (user) {
     user.name = name || user.name;
@@ -158,7 +159,9 @@ const updateUser = AsyncHandler(async (req, res) => {
 
 
 const deleteUser = AsyncHandler(async (req, res) => {
-  const user = await User.findById(req.account._id);
+  const { id } = req.account._id;
+
+  const user = await User.findById(id);
 
   if (user) {
     if (user.image) {
@@ -174,7 +177,9 @@ const deleteUser = AsyncHandler(async (req, res) => {
 
 
 const getUserById = AsyncHandler(async (req, res) => {
-const user = await User.findById(req.params.id); 
+  const { id } = req.params.id;
+  
+  const user = await User.findById(id); 
 
 	if (user) {
 		return res.json({
