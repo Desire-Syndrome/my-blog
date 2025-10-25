@@ -21,9 +21,9 @@ const getArticles = AsyncHandler(async (req, res) => {
 
 
 const getArticle = AsyncHandler(async (req, res) => {
-	const { id } = req.params;
+	const { articleId } = req.params;
 
-	const article = await Article.findById(id)
+	const article = await Article.findById(articleId)
 		.populate("author", "name avatar")
 		.populate("reviews.user", "name avatar");
 
@@ -36,7 +36,7 @@ const getArticle = AsyncHandler(async (req, res) => {
 
 
 const getUserArticles = AsyncHandler(async (req, res) => {
-	const userId = req.params.id;
+	const { userId } = req.params;
 
 	const articles = await Article.find({ author: userId });
 	if (articles.length === 0) {
@@ -53,12 +53,12 @@ const postArticle = AsyncHandler(async (req, res) => {
 	const { title, shortText, fullText } = req.body;
 
 	const user = await User.findById(userId);
-  if (!user) {
-    return res.status(404).json({ message: "User not found." });
-  }
-  if (!user.isConfirmed) {
-    return res.status(400).json({ message: "Email not confirmed. Please confirm your email first." });
-  }
+	if (!user) {
+		return res.status(404).json({ message: "User not found." });
+	}
+	if (!user.isConfirmed) {
+		return res.status(400).json({ message: "Email not confirmed. Please confirm your email first." });
+	}
 
 	if (!title || !fullText) {
 		return res.status(400).json({ message: "Title and content are required." });
@@ -79,12 +79,60 @@ const postArticle = AsyncHandler(async (req, res) => {
 
 
 const updateArticle = AsyncHandler(async (req, res) => {
+	const { articleId } = req.params;
+	const userId = req.account._id;
 
+	const article = await Article.findById(articleId);
+	if (article) {
+		if (article.author.toString() !== userId.toString()) {
+			return res.status(403).json({ message: "You don't have permission to update this article." });
+		}
+
+		article.title = req.body.title || article.title;
+		article.shortText = req.body.shortText || article.shortText;
+		article.fullText = req.body.fullText || article.fullText;
+
+		if (req.files?.articleImage && req.files.articleImage.length > 0) {
+			if (article.image) {
+				await deleteUploadedFile(article.image);
+			}
+			const articleImagePath = await saveUploadedFile(req.files.articleImage[0], "articleImage");
+			article.image = articleImagePath;
+		}
+
+		const updatedArticle = await article.save();
+		return res.status(200).json({
+			_id: updatedArticle.id,
+			title: updatedArticle.title,
+			shortText: updatedArticle.shortText,
+			fullText: updatedArticle.fullText,
+			image: article.image || null
+		});
+	} else {
+		return res.status(404).json({ message: "Article not found." });
+	}
 });
 
 
 const deleteArticle = AsyncHandler(async (req, res) => {
+	const { articleId } = req.params;
+	const userId = req.account._id;
 
+	const article = await Article.findById(articleId);
+	if (article) {
+		if (article.author.toString() !== userId.toString()) {
+			return res.status(403).json({ message: "You don't have permission to delete this article." });
+		}
+
+		if (article.image) {
+			await deleteUploadedFile(article.image);
+		}
+
+		await article.deleteOne();
+		return res.status(200).json({ message: "Article deleted successfully." });
+	} else {
+		return res.status(404).json({ message: "Article not found." });
+	}
 });
 
 
