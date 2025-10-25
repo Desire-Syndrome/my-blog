@@ -98,7 +98,7 @@ const userVerify = AsyncHandler(async (req, res) => {
 
 
 const updateUser = AsyncHandler(async (req, res) => {
-  const { userId } = req.account._id;
+  const  userId  = req.account._id;
   const { name, email, oldPassword, newPassword } = req.body;
 
   const user = await User.findById(userId);
@@ -159,7 +159,7 @@ const updateUser = AsyncHandler(async (req, res) => {
 
 
 const deleteUser = AsyncHandler(async (req, res) => {
-  const { userId } = req.account._id;
+  const  userId  = req.account._id;
 
   const user = await User.findById(userId);
 
@@ -177,7 +177,7 @@ const deleteUser = AsyncHandler(async (req, res) => {
 
 
 const getUserById = AsyncHandler(async (req, res) => {
-  const { userId } = req.params;
+  const  userId  = req.params.userId;
   
   const user = await User.findById(userId); 
 
