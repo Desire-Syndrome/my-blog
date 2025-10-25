@@ -16,7 +16,7 @@ router.get('/verify/:token', userVerify);
 router.put('/profile', protect, upload.fields([{ name: 'avatar', maxCount: 1 }]), updateUser);
 router.delete('/profile', protect, deleteUser);
 
-router.get('/profile/:id', getUserById);
+router.get('/profile/:userId', getUserById);
 
 
 module.exports = router;

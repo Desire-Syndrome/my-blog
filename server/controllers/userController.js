@@ -177,7 +177,7 @@ const deleteUser = AsyncHandler(async (req, res) => {
 
 
 const getUserById = AsyncHandler(async (req, res) => {
-  const { userId } = req.params.id;
+  const { userId } = req.params;
   
   const user = await User.findById(userId); 
 
