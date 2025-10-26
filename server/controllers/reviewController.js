@@ -104,4 +104,34 @@ const deleteReview = AsyncHandler(async (req, res) => {
 });
 
 
-module.exports = { postReview, updateReview, deleteReview };
+const getUserReviews = AsyncHandler(async (req, res) => {
+	const userId = req.params.userId;
+
+	const user = await User.findById(userId);
+	if (!user) {
+		return res.status(404).json({ message: "User not found." });
+	}
+
+	const page = Number(req.query.page) || 1;
+	const limit = Number(req.query.limit) || 12;
+	const skip = (page - 1) * limit;
+	const totalReviews = await Review.countDocuments({ user: userId });
+
+	const reviews = await Review.find({ user: userId }).sort({ _id: -1 }) 
+		.populate("article", "title _id")
+		.skip(skip).limit(limit);
+	if (reviews.length === 0) {
+		return res.status(404).json({ reviews: [] });
+	}
+
+	return res.status(200).json({ 
+		reviews,
+		totalPages: Math.ceil(totalReviews / limit), page
+	 });
+});
+
+
+module.exports = {
+	postReview, updateReview, deleteReview,
+	getUserReviews
+};
