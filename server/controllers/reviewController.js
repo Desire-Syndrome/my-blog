@@ -6,9 +6,8 @@ const Review = require("../models/Review.js");
 
 
 const postReview = AsyncHandler(async (req, res) => {
-	const articleId = req.params.articleId;
 	const userId = req.account._id;
-	const { rating, comment } = req.body;
+	const { rating, comment, articleId } = req.body;
 
 	const user = await User.findById(userId);
 	if (!user) {

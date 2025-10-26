@@ -13,10 +13,10 @@ router.post('/registration', upload.fields([{ name: 'avatar', maxCount: 1}]), us
 router.post('/login', userLogin);
 router.get('/verify/:token', userVerify);
 
-router.put('/profile', protect, upload.fields([{ name: 'avatar', maxCount: 1 }]), updateUser);
-router.delete('/profile', protect, deleteUser);
+router.put('/update', protect, upload.fields([{ name: 'avatar', maxCount: 1 }]), updateUser);
+router.delete('/delete', protect, deleteUser);
 
-router.get('/profile/:userId', getUserById);
+router.get('/get-by-id/:userId', getUserById);
 
 
 module.exports = router;
