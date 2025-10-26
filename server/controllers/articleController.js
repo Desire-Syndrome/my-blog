@@ -9,19 +9,28 @@ const User = require("../models/User.js");
 
 
 const getArticles = AsyncHandler(async (req, res) => {
+	const page = Number(req.query.page) || 1;
+	const limit = Number(req.query.limit) || 12;
+	const skip = (page - 1) * limit;
+	const totalArticles = await Article.countDocuments();
+
 	const articles = await Article.find().sort({ _id: -1 })
-		.populate("author", "name avatar");
+		.populate("author", "name avatar")
+		.skip(skip).limit(limit);
 
 	if (articles.length === 0) {
 		return res.status(200).json({ articles: [] });
 	}
 
-	return res.status(200).json({ articles });
+	return res.status(200).json({ 
+		articles,
+		totalPages: Math.ceil(totalArticles / limit), page
+	 });
 });
 
 
 const getArticle = AsyncHandler(async (req, res) => {
-	const { articleId } = req.params;
+	const articleId = req.params.articleId;
 
 	const article = await Article.findById(articleId)
 		.populate("author", "name avatar")
@@ -36,15 +45,24 @@ const getArticle = AsyncHandler(async (req, res) => {
 
 
 const getUserArticles = AsyncHandler(async (req, res) => {
-	const { userId } = req.params;
+	const page = Number(req.query.page) || 1;
+	const limit = Number(req.query.limit) || 12;
+	const skip = (page - 1) * limit;
+	const totalArticles = await Article.countDocuments();
 
-	const articles = await Article.find({ author: userId });
+	const userId = req.params.userId;
+
+	const articles = await Article.find({ author: userId }).sort({ _id: -1 }) 
+		.skip(skip).limit(limit);
 	if (articles.length === 0) {
 		return res.status(404).json({ articles: [] });
 
 	}
 
-	return res.status(200).json({ articles });
+	return res.status(200).json({ 
+		articles,
+		totalPages: Math.ceil(totalArticles / limit), page
+	 });
 });
 
 
@@ -79,7 +97,7 @@ const postArticle = AsyncHandler(async (req, res) => {
 
 
 const updateArticle = AsyncHandler(async (req, res) => {
-	const { articleId } = req.params;
+	const articleId = req.params.articleId;
 	const userId = req.account._id;
 
 	const article = await Article.findById(articleId);
@@ -115,7 +133,7 @@ const updateArticle = AsyncHandler(async (req, res) => {
 
 
 const deleteArticle = AsyncHandler(async (req, res) => {
-	const { articleId } = req.params;
+	const articleId = req.params.articleId;
 	const userId = req.account._id;
 
 	const article = await Article.findById(articleId);
