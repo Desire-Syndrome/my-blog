@@ -102,7 +102,7 @@ const updateArticle = AsyncHandler(async (req, res) => {
 
 	const article = await Article.findById(articleId);
 	if (article) {
-		if (article.author.toString() !== userId.toString()) {
+		if (article.author.toString() !== userId.toString() && !req.user.isAdmin) {
 			return res.status(403).json({ message: "You don't have permission to update this article." });
 		}
 
@@ -138,7 +138,7 @@ const deleteArticle = AsyncHandler(async (req, res) => {
 
 	const article = await Article.findById(articleId);
 	if (article) {
-		if (article.author.toString() !== userId.toString()) {
+		if (article.author.toString() !== userId.toString() && !req.user.isAdmin) {
 			return res.status(403).json({ message: "You don't have permission to delete this article." });
 		}
 
