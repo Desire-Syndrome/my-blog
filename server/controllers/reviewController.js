@@ -10,14 +10,17 @@ const postReview = AsyncHandler(async (req, res) => {
 	const userId = req.account._id;
 	const { rating, comment } = req.body;
 
+	const user = await User.findById(userId);
+	if (!user) {
+		return res.status(400).json({ message: "Please log in first." });
+	}
+	if (!user.isConfirmed) {
+		return res.status(400).json({ message: "Email not confirmed. Please confirm your email first." });
+	}
+
 	const article = await Article.findById(articleId);
 	if (!article) {
 		return res.status(404).json({ message: "Article not found." });
-	}
-
-	const user = await User.findById(userId);
-	if (!user.isConfirmed) {
-		return res.status(400).json({ message: "Email not confirmed. Please confirm your email first." });
 	}
 
 	const existingReview = await Review.findOne({ article: articleId, user: userId });
