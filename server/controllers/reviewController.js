@@ -24,11 +24,11 @@ const postReview = AsyncHandler(async (req, res) => {
 		return res.status(404).json({ message: "Article not found." });
 	}
 
-	const existingReview = await Review.findOne({ article: articleId, user: userId }); 
-	if (existingReview) { 
+	const existingReview = await Review.findOne({ article: articleId, user: userId });
+	if (existingReview) {
 		return res.status(400).json({ message: "You have already reviewed this article." });
-	 }
- 
+	}
+
 	if (!rating || rating < 1 || rating > 5) {
 		return res.status(400).json({ message: "Please rate from 1 to 5." });
 	}
@@ -40,16 +40,48 @@ const postReview = AsyncHandler(async (req, res) => {
 
 	await updateArticleRating(articleId);
 
-	return res.status(201).json({ 
-		message: "Review successfully added.", 
+	return res.status(201).json({
+		message: "Review successfully added.",
 		review
 	});
 });
- 
+
 
 const updateReview = AsyncHandler(async (req, res) => {
+	const userId = req.account._id;
+	const reviewId = req.params.reviewId;
+	const { rating, comment } = req.body;
 
+	const user = await User.findById(userId);
+	if (!user) {
+		return res.status(400).json({ message: "Please log in first." });
+	}
+
+	const review = await Review.findById(reviewId);
+	if (!review) {
+		return res.status(404).json({ message: "Review not found." });
+	}
+
+	if (review.user.toString() !== userId.toString() && !req.account.isAdmin) {
+		return res.status(403).json({ message: "You don't have permission to update this review." });
+	}
+
+	if (!rating || rating < 1 || rating > 5) {
+		return res.status(400).json({ message: "Please rate from 1 to 5." });
+	}
+
+	review.rating = rating;
+	review.comment = comment || review.comment;
+	await review.save();
+
+	await updateArticleRating(review.article);
+
+	return res.status(200).json({
+		message: "Review updated successfully.",
+		review,
+	});
 });
+
 
 
 const deleteReview = AsyncHandler(async (req, res) => {
