@@ -93,7 +93,7 @@ const postArticle = AsyncHandler(async (req, res) => {
 		image: articleImagePath
 	});
 	return res.status(201).json({ 
-		message: "Article successfully created.", 
+		message: "Article created successfully.", 
 		article
 	});
 });
@@ -123,7 +123,7 @@ const updateArticle = AsyncHandler(async (req, res) => {
 
 		const updatedArticle = await article.save();
 		return res.status(200).json({
-			message: "Article successfully updated.", 
+			message: "Article updated successfully.", 
 			updatedArticle
 		});
 	} else {
