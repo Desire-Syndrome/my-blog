@@ -1,11 +1,10 @@
 const AsyncHandler = require('express-async-handler');
 
-const generateToken = require('../middleware/tokenGenerate');
-
 const { saveUploadedFile, deleteUploadedFile } = require('../middleware/multer.js');
 
 const Article = require("../models/Article.js");
 const User = require("../models/User.js");
+const Review = require("../models/Review.js");
 
 
 const getArticles = AsyncHandler(async (req, res) => {
@@ -33,14 +32,16 @@ const getArticle = AsyncHandler(async (req, res) => {
 	const articleId = req.params.articleId;
 
 	const article = await Article.findById(articleId)
-		.populate("author", "name avatar")
-		.populate("reviews.user", "name avatar");
+		.populate("author", "name avatar");
 
 	if (!article) {
 		return res.status(404).json({ message: "Article not found." });
 	}
 
-	return res.status(200).json({ article });
+	const reviews = await Review.find({ article: articleId })
+		.populate("user", "name avatar");
+
+	return res.status(200).json({ article, reviews });
 });
 
 
@@ -146,6 +147,7 @@ const deleteArticle = AsyncHandler(async (req, res) => {
 			await deleteUploadedFile(article.image);
 		}
 
+		await Review.deleteMany({ article: articleId });
 		await article.deleteOne();
 		return res.status(200).json({ message: "Article deleted successfully." });
 	} else {
@@ -154,19 +156,4 @@ const deleteArticle = AsyncHandler(async (req, res) => {
 });
 
 
-const postReview = AsyncHandler(async (req, res) => {
-
-});
-
-
-const updateReview = AsyncHandler(async (req, res) => {
-
-});
-
-
-const deleteReview = AsyncHandler(async (req, res) => {
-
-});
-
-
-module.exports = { getArticles, getArticle, getUserArticles, postArticle, updateArticle, deleteArticle, postReview, updateReview, deleteReview };
+module.exports = { getArticles, getArticle, getUserArticles, postArticle, updateArticle, deleteArticle };

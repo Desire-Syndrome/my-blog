@@ -30,6 +30,8 @@ const userRoutes = require("./routes/userRoutes.js")
 app.use('/api/user', userRoutes);
 const articleRoutes = require("./routes/articleRoutes.js")
 app.use('/api/article', articleRoutes);
+const reviewRoutes = require("./routes/reviewRoutes.js")
+app.use('/api/review', reviewRoutes);
 
 
 // Setup and Run Server

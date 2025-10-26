@@ -17,9 +17,5 @@ router.post('/', protect, upload.fields([{ name: 'articleImage', maxCount: 1}]),
 router.put('/:articleId', protect, upload.fields([{ name: 'articleImage', maxCount: 1}]), updateArticle);
 router.delete('/:articleId', protect, deleteArticle);
 
-router.post('/:articleId/reviews', protect, postReview);
-router.post('/:articleId/reviews/:reviewId', protect, updateReview);
-router.post('/:articleId/reviews/:reviewId', protect, deleteReview);
-
 
 module.exports = router;
