@@ -1,5 +1,7 @@
 const AsyncHandler = require('express-async-handler');
 
+const { updateArticleRating } = require('../controllers/articleController.js');
+
 const Article = require("../models/Article.js");
 const User = require("../models/User.js");
 const Review = require("../models/Review.js");
@@ -22,11 +24,11 @@ const postReview = AsyncHandler(async (req, res) => {
 		return res.status(404).json({ message: "Article not found." });
 	}
 
-	const existingReview = await Review.findOne({ article: articleId, user: userId });
-	if (existingReview) {
+	const existingReview = await Review.findOne({ article: articleId, user: userId }); 
+	if (existingReview) { 
 		return res.status(400).json({ message: "You have already reviewed this article." });
-	}
-
+	 }
+ 
 	if (!rating || rating < 1 || rating > 5) {
 		return res.status(400).json({ message: "Please rate from 1 to 5." });
 	}
@@ -36,19 +38,14 @@ const postReview = AsyncHandler(async (req, res) => {
 		comment, rating
 	});
 
-	const allReviews = await Review.find({ article: articleId });
-	const averageRating = allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length;
-
-	article.numReview = allReviews.length;
-	article.rating = averageRating;
-	await article.save();
+	await updateArticleRating(articleId);
 
 	return res.status(201).json({ 
 		message: "Review successfully added.", 
 		review
 	});
 });
-
+ 
 
 const updateReview = AsyncHandler(async (req, res) => {
 

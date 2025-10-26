@@ -154,5 +154,19 @@ const deleteArticle = AsyncHandler(async (req, res) => {
 	}
 });
 
+ 
+const updateArticleRating = AsyncHandler(async (articleId) => {
+	const allReviews = await Review.find({ article: articleId });
 
-module.exports = { getArticles, getArticle, getUserArticles, postArticle, updateArticle, deleteArticle };
+	const numReviews = allReviews.length;
+	const averageRating = numReviews === 0 ? 0 : allReviews.reduce((sum, r) => sum + r.rating, 0) / numReviews;
+
+	await Article.findByIdAndUpdate(articleId, {
+		numReview: numReviews,
+		rating: averageRating
+	});
+});
+
+
+
+module.exports = { getArticles, getArticle, getUserArticles, postArticle, updateArticle, deleteArticle, updateArticleRating };
