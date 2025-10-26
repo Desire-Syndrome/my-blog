@@ -1,7 +1,8 @@
 const router = require('express').Router();
   
 const {
-  getArticles, getArticle, getUserArticles, postArticle, updateArticle, deleteArticle, postReview, updateReview, deleteReview
+  getArticles, getArticle, getUserArticles, 
+  postArticle, updateArticle, deleteArticle
 } = require('../controllers/articleController.js');
 
 const protect = require('../middleware/Auth.js'); 

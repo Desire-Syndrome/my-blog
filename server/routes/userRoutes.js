@@ -1,7 +1,8 @@
 const router = require('express').Router();
   
 const {
-  userRegistration, userLogin, userVerify, updateUser, deleteUser, getUserById
+  userRegistration, userLogin, userVerify, 
+  updateUser, deleteUser, getUserById
 } = require('../controllers/userController.js');
 
 const protect = require('../middleware/Auth.js'); 
