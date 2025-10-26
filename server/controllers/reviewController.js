@@ -37,11 +37,9 @@ const postReview = AsyncHandler(async (req, res) => {
 		article: articleId, user: userId,
 		comment, rating
 	});
-
 	await updateArticleRating(articleId);
-
 	return res.status(201).json({
-		message: "Review successfully added.",
+		message: "Review added successfully.",
 		review
 	});
 });
@@ -73,19 +71,36 @@ const updateReview = AsyncHandler(async (req, res) => {
 	review.rating = rating;
 	review.comment = comment || review.comment;
 	await review.save();
-
 	await updateArticleRating(review.article);
-
 	return res.status(200).json({
 		message: "Review updated successfully.",
-		review,
+		review
 	});
 });
 
 
-
 const deleteReview = AsyncHandler(async (req, res) => {
+	const userId = req.account._id;
+	const reviewId = req.params.reviewId;
 
+	const user = await User.findById(userId);
+	if (!user) {
+		return res.status(400).json({ message: "Please log in first." });
+	}
+
+	const review = await Review.findById(reviewId);
+	if (!review) {
+		return res.status(404).json({ message: "Review not found." });
+	}
+
+	if (review.user.toString() !== userId.toString() && !req.account.isAdmin) {
+		return res.status(403).json({ message: "You don't have permission to update this review." });
+	}
+
+	const articleId = review.article;
+	await review.deleteOne();
+	await updateArticleRating(articleId);
+	return res.status(200).json({ message: "Review deleted successfully." });
 });
 
 
