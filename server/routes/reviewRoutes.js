@@ -7,9 +7,9 @@ const {
 const protect = require('../middleware/Auth.js'); 
 
 
-router.post('/:articleId/reviews', protect, postReview);
-router.post('/:articleId/reviews/:reviewId', protect, updateReview);
-router.post('/:articleId/reviews/:reviewId', protect, deleteReview);
+router.post('/:articleId', protect, postReview);
+router.put('/:reviewId', protect, updateReview);
+router.delete('/:reviewId', protect, deleteReview);
 
 
 module.exports = router;
