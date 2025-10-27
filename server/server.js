@@ -20,6 +20,10 @@ const path = require("path");
 app.use('/uploads', express.static(path.join(__dirname, 'data', 'uploads')));
 
 
+// sheduled tasks
+require("./tasks/unbanTask.js");
+
+
 // Routes
 // test and seeder
 app.get('/', (req, res) => { res.json({ message: 'Server works fine!' }); });
