@@ -9,6 +9,8 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   isAdmin: { type: Boolean, default: false },
   isConfirmed: { type: Boolean, default: false }, 
+	isBanned: {type: Boolean, default: false},
+	banExpiresAt: {type: Date, default: null},
   confirmationToken: { type: String }, 
 	image: { type: String }
 }, { timestamps: true, versionKey: false });

@@ -104,6 +104,10 @@ const updateUser = AsyncHandler(async (req, res) => {
 
   const user = await User.findById(userId);
   if (user) {
+    if (user.isBanned) {
+		  return res.status(403).json({ message: `You were banned until ${user.banExpiresAt.toLocaleString()}` });
+	  }
+
     user.name = name || user.name;
 
     const existUser = await User.findOne({ email });
@@ -164,6 +168,10 @@ const deleteUser = AsyncHandler(async (req, res) => {
   const user = await User.findById(userId);
 
   if (user) {
+    if (user.isBanned) {
+		  return res.status(403).json({ message: `You were banned until ${user.banExpiresAt.toLocaleString()}` });
+	  }
+
     if (user.image) {
       await deleteUploadedFile(user.image);
     }
@@ -194,7 +202,43 @@ const getUserById = AsyncHandler(async (req, res) => {
 });
 
 
+const banUser = AsyncHandler(async (req, res) => {
+	const userId = req.params.userId;
+	const { days } = req.body; 
+
+	const user = await User.findById(userId);
+	if (!user) {
+		return res.status(404).json({ message: "User not found." });
+	}
+
+	const banDuration = Number(days) || 7; 
+	const banExpiresAt = new Date();
+	banExpiresAt.setDate(banExpiresAt.getDate() + banDuration);
+
+	user.isBanned = true;
+	user.banExpiresAt = banExpiresAt;
+	await user.save();
+	return res.status(200).json({ message: `User banned for ${banDuration} day(s).` });
+});
+
+
+const unbanUser = AsyncHandler(async (req, res) => {
+	const userId = req.params.userId;
+
+	const user = await User.findById(userId);
+	if (!user) {
+		return res.status(404).json({ message: "User not found." });
+	}
+
+	user.isBanned = false;
+	user.banExpiresAt = null;
+	await user.save();
+	return res.status(200).json({ message: "User unbanned successfully." });
+});
+
+
 module.exports = { 
   userRegistration, userLogin, userVerify, 
-  updateUser, deleteUser, getUserById 
+  updateUser, deleteUser, getUserById,
+  banUser, unbanUser
 };

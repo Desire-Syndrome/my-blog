@@ -20,10 +20,10 @@ const getArticles = AsyncHandler(async (req, res) => {
 		return res.status(200).json({ articles: [] });
 	}
 
-	return res.status(200).json({ 
+	return res.status(200).json({
 		articles,
 		totalPages: Math.ceil(totalArticles / limit), page
-	 });
+	});
 });
 
 
@@ -39,8 +39,8 @@ const getArticle = AsyncHandler(async (req, res) => {
 	const reviews = await Review.find({ article: articleId })
 		.populate("user", "name avatar");
 
-	return res.status(200).json({ 
-		article, reviews 
+	return res.status(200).json({
+		article, reviews
 	});
 });
 
@@ -58,16 +58,16 @@ const getUserArticles = AsyncHandler(async (req, res) => {
 	const skip = (page - 1) * limit;
 	const totalArticles = await Article.countDocuments();
 
-	const articles = await Article.find({ author: userId }).sort({ _id: -1 }) 
+	const articles = await Article.find({ author: userId }).sort({ _id: -1 })
 		.skip(skip).limit(limit);
 	if (articles.length === 0) {
 		return res.status(404).json({ articles: [] });
 	}
 
-	return res.status(200).json({ 
+	return res.status(200).json({
 		articles,
 		totalPages: Math.ceil(totalArticles / limit), page
-	 });
+	});
 });
 
 
@@ -78,6 +78,9 @@ const postArticle = AsyncHandler(async (req, res) => {
 	const user = await User.findById(userId);
 	if (!user) {
 		return res.status(404).json({ message: "User not found." });
+	}
+	if (user.isBanned) {
+		return res.status(403).json({ message: `You were banned until ${user.banExpiresAt.toLocaleString()}` });
 	}
 	if (!user.isConfirmed) {
 		return res.status(400).json({ message: "Email not confirmed. Please confirm your email first." });
@@ -97,8 +100,8 @@ const postArticle = AsyncHandler(async (req, res) => {
 		author: userId,
 		image: articleImagePath
 	});
-	return res.status(201).json({ 
-		message: "Article created successfully.", 
+	return res.status(201).json({
+		message: "Article created successfully.",
 		article
 	});
 });
@@ -110,6 +113,9 @@ const updateArticle = AsyncHandler(async (req, res) => {
 
 	const article = await Article.findById(articleId);
 	if (article) {
+		if (req.account.isBanned) {
+			return res.status(400).json({ message: `You were banned until ${req.account.banExpiresAt.toLocaleString()}` });
+		}
 		if (article.author.toString() !== userId.toString() && !req.account.isAdmin) {
 			return res.status(403).json({ message: "You don't have permission to update this article." });
 		}
@@ -128,7 +134,7 @@ const updateArticle = AsyncHandler(async (req, res) => {
 
 		const updatedArticle = await article.save();
 		return res.status(200).json({
-			message: "Article updated successfully.", 
+			message: "Article updated successfully.",
 			updatedArticle
 		});
 	} else {
@@ -143,6 +149,9 @@ const deleteArticle = AsyncHandler(async (req, res) => {
 
 	const article = await Article.findById(articleId);
 	if (article) {
+		if (req.account.isBanned) {
+			return res.status(400).json({ message: `You were banned until ${req.account.banExpiresAt.toLocaleString()}` });
+		}
 		if (article.author.toString() !== userId.toString() && !req.account.isAdmin) {
 			return res.status(403).json({ message: "You don't have permission to delete this article." });
 		}
@@ -173,8 +182,8 @@ const updateArticleRating = AsyncHandler(async (articleId) => {
 });
 
 
-module.exports = { 
-	getArticles, getArticle, getUserArticles, 
-	postArticle, updateArticle, deleteArticle, 
-	updateArticleRating 
+module.exports = {
+	getArticles, getArticle, getUserArticles,
+	postArticle, updateArticle, deleteArticle,
+	updateArticleRating
 };

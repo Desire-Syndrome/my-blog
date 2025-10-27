@@ -18,7 +18,10 @@ const postReview = AsyncHandler(async (req, res) => {
 	if (!user.isConfirmed) {
 		return res.status(400).json({ message: "Email not confirmed. Please confirm your email first." });
 	}
-
+	if (user.isBanned) {
+		return res.status(400).json({ message: `You were banned until ${user.banExpiresAt.toLocaleString()}` });
+	}
+	
 	const article = await Article.findById(articleId);
 	if (!article) {
 		return res.status(404).json({ message: "Article not found." });
@@ -54,6 +57,9 @@ const updateReview = AsyncHandler(async (req, res) => {
 	if (!user) {
 		return res.status(400).json({ message: "Please log in first." });
 	}
+	if (user.isBanned) {
+		return res.status(400).json({ message: `You were banned until ${user.banExpiresAt.toLocaleString()}` });
+	}
 
 	const review = await Review.findById(reviewId);
 	if (!review) {
@@ -86,6 +92,9 @@ const deleteReview = AsyncHandler(async (req, res) => {
 	const user = await User.findById(userId);
 	if (!user) {
 		return res.status(400).json({ message: "Please log in first." });
+	}
+	if (user.isBanned) {
+		return res.status(400).json({ message: `You were banned until ${user.banExpiresAt.toLocaleString()}` });
 	}
 
 	const review = await Review.findById(reviewId);
