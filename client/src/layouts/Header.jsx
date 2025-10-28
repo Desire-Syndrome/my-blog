@@ -107,7 +107,7 @@ const Header = () => {
 								<label htmlFor="image">
 									<img src={image ? URL.createObjectURL(image) : assetsImages.upload_area} alt="Upload image" className='w-24 h-24 rounded-full inline-block' />
 									<input onChange={e => setImage(e.target.files[0])} type="file" id='image' hidden />
-									<p className='mt-2'>Your photo</p>
+									<p className='mt-2'>Upload your photo</p>
 								</label>
 							</div>
 							<div className='border border-gray-300 px-4 py-2 flex items-center gap-2 rounded-full mt-2'>
@@ -133,7 +133,7 @@ const Header = () => {
 								{userLoginLoading ? "Loading..." : "Login"}
 							</button>
 							{errorMessage && (
-								<div className="mt-3 rounded-md bg-red-100 border border-red-400  px-4 py-3 text-sm text-center">
+								<div className="mt-3 rounded-md bg-rose-100 border border-rose-300  px-4 py-3 text-sm text-center">
 									{errorMessage}
 								</div>
 							)}
@@ -145,7 +145,7 @@ const Header = () => {
 								{userRegisterLoading ? "Loading..." : "Submit"}
 							</button>
 							{errorMessage && (
-								<div className="mt-3 rounded-md bg-red-100 border border-red-400  px-4 py-3 text-sm text-center">
+								<div className="mt-3 rounded-md bg-rose-100 border border-rose-300  px-4 py-3 text-sm text-center">
 									{errorMessage}
 								</div>
 							)}
