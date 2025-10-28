@@ -14,7 +14,7 @@ export const userRegisterReducer = (state = {}, action) => {
 		case USER_REGISTRATION_REQ:
 			return { loading: true }
 		case USER_REGISTRATION_SUCCESS:
-			return { loading: false, userInfo: action.payload, success: true }
+			return { loading: false, success: true , userInfo: action.payload }
 		case USER_REGISTRATION_FAIL:
 			return { loading: false, error: action.payload }
 		case USER_REGISTRATION_RESET:
@@ -28,7 +28,7 @@ export const userLoginReducer = (state = {}, action) => {
 		case USER_LOGIN_REQ:
 			return { loading: true }
 		case USER_LOGIN_SUCCESS:
-			return { loading: false, userInfo: action.payload, success: true }
+			return { loading: false, success: true , userInfo: action.payload }
 		case USER_LOGIN_FAIL:
 			return { loading: false, error: action.payload }
 		case USER_LOGOUT:
@@ -74,7 +74,7 @@ export const userGetByIdReducer = (state = userGetByIdInitialState, action) => {
 		case USER_GET_BY_ID_REQ:
 			return { loading: true}
 		case USER_GET_BY_ID_SUCCESS:  
-			return { loading: false, userInfo: action.payload }
+			return { loading: false, success: true , userInfo: action.payload }
 		case USER_GET_BY_ID_FAIL: 
 			return { loading: false, error: action.payload }
 		case USER_GET_BY_ID_RESET:
