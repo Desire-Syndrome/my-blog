@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 
 import Home from './pages/Home'
 import Dashboard from './pages/Dashboard'
+import EditProfile from './pages/dashboard/EditProfile'
+
 
 function App() {
 
@@ -20,7 +22,7 @@ function App() {
       <Routes>
         <Route exact path="/" element={<Home />}></Route>
         <Route exact path='/dashboard' element={userInfo ? <Dashboard /> : <Navigate to="/" />}>
-          
+          <Route exact path='edit-profile' element={<EditProfile />} />
         </Route>
       </Routes>
     </Router>
