@@ -5,9 +5,13 @@ import UseScrollToTop from "./hooks/useScrollToTop"
 import { useSelector } from "react-redux";
 
 import Home from './pages/Home'
-
+import Dashboard from './pages/Dashboard'
 
 function App() {
+
+  const userLoginReducer = useSelector((state) => state.userLoginReducer);
+  const { userInfo } = userLoginReducer;
+
 
   return (
 
@@ -15,7 +19,10 @@ function App() {
       <UseScrollToTop />
       <Routes>
         <Route exact path="/" element={<Home />}></Route>
-        </Routes>
+        <Route exact path='/dashboard' element={userInfo ? <Dashboard /> : <Navigate to="/" />}>
+          
+        </Route>
+      </Routes>
     </Router>
 
   );
