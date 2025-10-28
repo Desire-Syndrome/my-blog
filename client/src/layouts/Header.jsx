@@ -73,7 +73,7 @@ const Header = () => {
 
 	return (<>
 
-		<div className='shadow py-4'><div className='max-w-[1900px] px-4 2xl:px-20 mx-auto flex flex-wrap justify-between items-center lg:order-1'>
+		<div className='border-sky-200 border-b py-4'><div className='max-w-[1900px] px-4 2xl:px-20 mx-auto flex flex-wrap justify-between items-center lg:order-1'>
 			<Link to="/" className='w-[70px] md:w-[90px]'><img src={assetsImages.logo} className='w-full' alt="Logo" /></Link>
 			<div className='flex gap-2 md:text-sm text-xs lg:order-3'>
 
