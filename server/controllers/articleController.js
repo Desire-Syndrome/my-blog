@@ -8,21 +8,33 @@ const Review = require("../models/Review.js");
 
 
 const getArticles = AsyncHandler(async (req, res) => {
+	const categories = req.query.categories ? req.query.categories.split(",") : [];
+  const title = req.query.title || "";
+
+	const filteredArticles = {};
+  if (categories.length > 0) { filteredArticles.categories = { $in: categories }; }
+  if (title) { filteredArticles.title = { $regex: title, $options: "i" }; }
+	
+	const totalFilteredArticles = await Article.countDocuments(filteredArticles);
+
 	const page = Number(req.query.page) || 1;
 	const limit = Number(req.query.limit) || 12;
 	const skip = (page - 1) * limit;
-	const totalArticles = await Article.countDocuments();
 
-	const articles = await Article.find().sort({ _id: -1 })
+	const articles = await Article.find(filteredArticles).sort({ _id: -1 })
 		.populate("author", "name avatar")
 		.skip(skip).limit(limit);
+
 	if (articles.length === 0) {
-		return res.status(200).json({ articles: [] });
+		return res.status(200).json({ 
+			articles: [],
+			totalPages: Math.ceil(totalFilteredArticles / limit), page
+	 });
 	}
 
 	return res.status(200).json({
 		articles,
-		totalPages: Math.ceil(totalArticles / limit), page
+		totalPages: Math.ceil(totalFilteredArticles / limit), page
 	});
 });
 
@@ -73,7 +85,7 @@ const getUserArticles = AsyncHandler(async (req, res) => {
 
 const postArticle = AsyncHandler(async (req, res) => {
 	const userId = req.account._id;
-	const { title, shortText, fullText } = req.body;
+	const { title, shortText, fullText, category } = req.body;
 
 	const user = await User.findById(userId);
 	if (!user) {
@@ -96,7 +108,7 @@ const postArticle = AsyncHandler(async (req, res) => {
 	}
 
 	const article = await Article.create({
-		title, shortText, fullText,
+		title, shortText, fullText, category,
 		author: userId,
 		image: articleImagePath
 	});
@@ -123,6 +135,7 @@ const updateArticle = AsyncHandler(async (req, res) => {
 		article.title = req.body.title || article.title;
 		article.shortText = req.body.shortText || article.shortText;
 		article.fullText = req.body.fullText || article.fullText;
+		article.category = req.body.category || article.category;
 
 		if (req.files?.articleImage && req.files.articleImage.length > 0) {
 			if (article.image) {
