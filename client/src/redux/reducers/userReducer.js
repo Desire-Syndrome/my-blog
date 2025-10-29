@@ -6,7 +6,7 @@ import {
 	USER_GET_BY_ID_REQ, USER_GET_BY_ID_SUCCESS, USER_GET_BY_ID_FAIL, USER_GET_BY_ID_RESET,
 	USER_BAN_REQ, USER_BAN_SUCCESS, USER_BAN_FAIL, USER_BAN_RESET,
 	USER_UNBAN_REQ, USER_UNBAN_SUCCESS, USER_UNBAN_FAIL, USER_UNBAN_RESET
-} from "../constants/UserConstants";
+} from "../constants/userConstants";
 
 
 export const userRegisterReducer = (state = {}, action) => {
