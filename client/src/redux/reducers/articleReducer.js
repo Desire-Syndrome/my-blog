@@ -12,7 +12,8 @@ export const articlesGetAllReducer = (state = initialArticleGetAllState, action)
 		case ARTICLE_GET_ALL_SUCCESS: 
 			return { 
 				loading: false, articles: action.payload.articles,
-				page: action.payload.page, totalPages: action.payload.totalPages 
+				page: action.payload.page, totalPages: action.payload.totalPages, totalArticles: action.payload.totalArticles
+
 			 }
 		case ARTICLE_GET_ALL_FAIL: 
 			return { ...state, loading: false, error: action.payload }

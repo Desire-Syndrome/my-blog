@@ -8,6 +8,8 @@ const Review = require("../models/Review.js");
 
 
 const getArticles = AsyncHandler(async (req, res) => {
+	const totalArticles = await Article.countDocuments();
+
 	const categories = req.query.categories ? req.query.categories.split(",") : [];
   const title = req.query.title || "";
 
@@ -28,13 +30,13 @@ const getArticles = AsyncHandler(async (req, res) => {
 	if (articles.length === 0) {
 		return res.status(200).json({ 
 			articles: [],
-			totalPages: Math.ceil(totalFilteredArticles / limit), page
+			totalPages: Math.ceil(totalFilteredArticles / limit), page, totalArticles
 	 });
 	}
 
 	return res.status(200).json({
 		articles,
-		totalPages: Math.ceil(totalFilteredArticles / limit), page
+		totalPages: Math.ceil(totalFilteredArticles / limit), page, totalArticles
 	});
 });
 
