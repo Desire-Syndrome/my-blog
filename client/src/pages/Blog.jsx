@@ -29,7 +29,7 @@ const Blog = () => {
 	// page pagination
 	const initialPage = Number(searchParams.get("page")) || 1;
 	const [currentPage, setCurrentPage] = useState(initialPage);
-	const articlesPerPage = 1;
+	const articlesPerPage = 12;
 
 	// redux
 	const dispatch = useDispatch();
