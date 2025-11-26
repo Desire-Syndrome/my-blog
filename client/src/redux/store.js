@@ -14,14 +14,14 @@ userRegisterReducer, userLoginReducer, userUpdateReducer, userDeleteReducer,
 userGetByIdReducer, userBanReducer, userUnbanReducer,
 } from "./reducers/userReducer";
 import {
-articlesGetAllReducer,
+articlesGetAllReducer, articlePostReducer
 } from "./reducers/articleReducer";
 
 
 const rootReducer = combineReducers({
 userRegisterReducer, userLoginReducer, userUpdateReducer, userDeleteReducer,
 userGetByIdReducer, userBanReducer, userUnbanReducer,
-articlesGetAllReducer,
+articlesGetAllReducer, articlePostReducer
 });
 
 

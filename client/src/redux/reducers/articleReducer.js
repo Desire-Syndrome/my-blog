@@ -1,5 +1,6 @@
 import {
-	ARTICLE_GET_ALL_REQ, ARTICLE_GET_ALL_SUCCESS, ARTICLE_GET_ALL_FAIL, ARTICLE_GET_ALL_RESET
+	ARTICLE_GET_ALL_REQ, ARTICLE_GET_ALL_SUCCESS, ARTICLE_GET_ALL_FAIL, ARTICLE_GET_ALL_RESET,
+	ARTICLE_POST_REQ, ARTICLE_POST_SUCCESS, ARTICLE_POST_FAIL, ARTICLE_POST_RESET
 } from "../constants/articleConstants";
 
 
@@ -19,6 +20,20 @@ export const articlesGetAllReducer = (state = initialArticleGetAllState, action)
 			return { ...state, loading: false, error: action.payload }
 		case ARTICLE_GET_ALL_RESET:
 			return initialArticleGetAllState;
+		default: return state
+	}
+}
+
+export const articlePostReducer = (state = {}, action) => {
+	switch (action.type) {
+		case ARTICLE_POST_REQ:
+			return { loading: true }
+		case ARTICLE_POST_SUCCESS: 
+			return { loading: false, success: true, article: action.payload.article }
+		case ARTICLE_POST_FAIL: 
+			return { loading: false, error: action.payload }
+			case ARTICLE_POST_RESET: 
+			return {};
 		default: return state
 	}
 }

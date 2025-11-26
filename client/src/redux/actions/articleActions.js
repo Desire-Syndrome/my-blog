@@ -3,7 +3,8 @@ const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 import axios from 'axios';
 
 import {
-	ARTICLE_GET_ALL_REQ, ARTICLE_GET_ALL_SUCCESS, ARTICLE_GET_ALL_FAIL, ARTICLE_GET_ALL_RESET
+	ARTICLE_GET_ALL_REQ, ARTICLE_GET_ALL_SUCCESS, ARTICLE_GET_ALL_FAIL, ARTICLE_GET_ALL_RESET,
+	ARTICLE_POST_REQ, ARTICLE_POST_SUCCESS, ARTICLE_POST_FAIL, ARTICLE_POST_RESET
 } from "../constants/articleConstants";
 
 
@@ -31,3 +32,36 @@ export const articlesGetAllAction = (page = 1, limit = 12, categories = [], titl
 		});
 	}
 };
+
+export const articlePostAction = (articleData) => async (dispatch, getState) => {
+	try {
+		dispatch({
+			type: ARTICLE_POST_REQ
+		});
+
+		const userInfo = getState().userLoginReducer.userInfo;
+		if (!userInfo || !userInfo.token) {
+			throw new Error("User not authenticated");
+		}
+
+		const config = {
+			headers: { Authorization: `Bearer ${userInfo.token}` }
+		}
+
+		const [data] = await Promise.all([
+			axios.post(`${BASE_URL}/api/article/post`, articleData, config).then(res => res.data),
+			new Promise((resolve) => setTimeout(resolve, 1500))
+		]);
+		dispatch({
+			type: ARTICLE_POST_SUCCESS,
+			payload: data
+		});
+	} catch (error) {
+		setTimeout(() => {
+			dispatch({
+				type: ARTICLE_POST_FAIL,
+				payload: error.response && error.response.data.message ? error.response.data.message : error.message
+			});
+		}, 500);
+	}
+}
