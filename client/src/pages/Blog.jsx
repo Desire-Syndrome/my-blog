@@ -133,14 +133,16 @@ const Blog = () => {
 			<section className='w-full lg:w-4/5 text-gray-800 max-lg:px-4'>
 				<h3 id='job-list' className='font-medium text-3xl py-2'>Latest articles</h3>
 				<p className='mb-8'>Explore articles to suit every taste</p>
-				{!articlesLoading && articles.length > 0 ? (
-					<div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4'>
-						{articles.map((article, i) => (
-							<ArticleCard key={i} article={article} />
-						))}
-					</div>
-				) : (
-					<p>Nothing found, please change your search criteria...</p>
+				{!articlesLoading && (
+					articles.length > 0 ? (
+						<div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4'>
+							{articles.map((article, i) => (
+								<ArticleCard key={i} article={article} />
+							))}
+						</div>
+					) : (
+						<p>Nothing found, please change your search criteria...</p>
+					)
 				)}
 
 				{totalPages > 1 &&
