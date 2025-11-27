@@ -21,7 +21,7 @@ const ArticleCard = ({ article }) => {
 				</div>
 			):(
 				<div className="mt-2">
-					<img src={assetsImages.upload_area2} className="h-48 md:h-40 w-full object-cover" alt="Article image" />
+					<img src={assetsImages.no_image} className="h-48 md:h-40 w-full object-cover" alt="Article image" />
 				</div>
 			)}
 			<h3 className="font-medium text-xl mt-2">{article.title}</h3>
