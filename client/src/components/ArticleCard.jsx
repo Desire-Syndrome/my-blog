@@ -15,18 +15,24 @@ const ArticleCard = ({ article }) => {
 				<p className="text-sm text-gray-500">Category: <span className='text-black'>{article.category}</span></p>
 				<p className="text-sm text-gray-500">Date: <span className='text-black'>{new Date(article.createdAt).toLocaleDateString("en-GB")}</span></p>
 			</div>
-			{article.image && (
+			{article.image ? (
 				<div className="mt-2">
 					<img src={`${BASE_URL}${article.image}`} className="h-48 md:h-40 w-full object-cover" alt="Article image" />
 				</div>
+			):(
+				<div className="mt-2">
+					<img src={assetsImages.upload_area2} className="h-48 md:h-40 w-full object-cover" alt="Article image" />
+				</div>
 			)}
 			<h3 className="font-medium text-xl mt-2">{article.title}</h3>
+			<div className='mt-4 h-[60px] sm:h-[80px] md:h-[60px] overflow-hidden'>
 			{article.shortText ? (
-				<p className="text-gray-500 text-sm mt-4">{article.shortText.slice(0, 150)}</p>
+				<p className="text-gray-500 text-sm">{article.shortText.slice(0, 150)}</p>
 			) : (
-				<p dangerouslySetInnerHTML={{ __html: article.fullText.slice(0, 150) }} className="text-gray-500 text-sm mt-4"></p>
+				<p dangerouslySetInnerHTML={{ __html: article.fullText.slice(0, 150) }} className="text-gray-500 text-sm"></p>
 			)}
-			<div className="mt-2 flex items-center justify-center">
+			</div>
+			<div className="mt-4 flex items-center justify-center">
 				<p className='me-2 text-sm'>Rating:</p>
 				<img src={assetsImages.star} className='w-6 h-6' alt="Star" />
 				<p className='ms-2 text-sm'>{Number(article.rating).toFixed(1)} from 5</p>
