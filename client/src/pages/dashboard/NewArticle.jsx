@@ -83,7 +83,7 @@ const NewArticle = () => {
 		updatedData.append("category", category);
     updatedData.append("title", title);
     updatedData.append("shortText", shortText);
-    updatedData.append("fullText", quillRef.current.root.innerHTM);
+    updatedData.append("fullText", quillRef.current.root.innerHTML); 
     if (image) {
       updatedData.append("articleImage", image);
     }
