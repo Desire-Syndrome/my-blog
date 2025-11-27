@@ -35,7 +35,7 @@ const ArticleCard = ({ article }) => {
 			<div className="mt-4 flex items-center justify-center">
 				<p className='me-2 text-sm'>Rating:</p>
 				<img src={assetsImages.star} className='w-6 h-6' alt="Star" />
-				<p className='ms-2 text-sm'>{Number(article.rating).toFixed(1)} from 5</p>
+				<p className='ms-2 text-sm'>{Number(article.rating).toFixed(0)} / 5</p>
 			</div>
 		</div>
 
