@@ -14,7 +14,7 @@ const getArticles = AsyncHandler(async (req, res) => {
   const title = req.query.title || "";
 
 	const filteredArticles = {};
-  if (categories.length > 0) { filteredArticles.categories = { $in: categories }; }
+  if (categories.length > 0) { filteredArticles.category = { $in: categories }; }
   if (title) { filteredArticles.title = { $regex: title, $options: "i" }; }
 	
 	const totalFilteredArticles = await Article.countDocuments(filteredArticles);
