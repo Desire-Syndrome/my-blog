@@ -29,7 +29,7 @@ function UserMenu() {
 						<li><Link to={'/'} className='py-1 px-2 cursor-pointer flex items-center gap-2 hover:bg-sky-200 transition duration-300 ease-in-out'>
 							<img src={assetsImages.icon1} className='w-4 h-4' alt="icon" />Back to Website
 						</Link></li>
-						<li><Link to={'/dashboard/'} className='py-1 px-2 cursor-pointer flex items-center gap-2 hover:bg-sky-200 transition duration-300 ease-in-out'>
+						<li><Link to={'/dashboard/my-articles'} className='py-1 px-2 cursor-pointer flex items-center gap-2 hover:bg-sky-200 transition duration-300 ease-in-out'>
 							<img src={assetsImages.icon4} className='w-4 h-4' alt="icon" />To Dashboard
 						</Link></li>
 						<li><Link to={'/dashboard/edit-profile'} className='py-1 px-2 cursor-pointer flex items-center gap-2 hover:bg-sky-200 transition duration-300 ease-in-out'>
