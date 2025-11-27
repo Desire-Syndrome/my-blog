@@ -3,8 +3,9 @@ const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 import axios from 'axios';
 
 import {
-	ARTICLE_GET_ALL_REQ, ARTICLE_GET_ALL_SUCCESS, ARTICLE_GET_ALL_FAIL, ARTICLE_GET_ALL_RESET,
-	ARTICLE_POST_REQ, ARTICLE_POST_SUCCESS, ARTICLE_POST_FAIL, ARTICLE_POST_RESET
+	ARTICLE_GET_ALL_REQ, ARTICLE_GET_ALL_SUCCESS, ARTICLE_GET_ALL_FAIL, 
+	ARTICLE_POST_REQ, ARTICLE_POST_SUCCESS, ARTICLE_POST_FAIL, 
+	ARTICLE_GET_REQ, ARTICLE_GET_SUCCESS, ARTICLE_GET_FAIL, 
 } from "../constants/articleConstants";
 
 
@@ -63,5 +64,24 @@ export const articlePostAction = (articleData) => async (dispatch, getState) => 
 				payload: error.response && error.response.data.message ? error.response.data.message : error.message
 			});
 		}, 500);
+	}
+}
+
+export const articleGetAction = (id) => async (dispatch) => {
+	try {
+		dispatch({
+			type: ARTICLE_GET_REQ
+		});
+
+		const { data } = await axios.get(`${BASE_URL}/api/article/get-by-id/${id}`)
+		dispatch({
+			type: ARTICLE_GET_SUCCESS,
+			payload: data
+		});
+	} catch (error) {
+		dispatch({
+			type: ARTICLE_GET_FAIL,
+			payload: error.response && error.response.data.message ? error.response.data.message : error.message
+		});
 	}
 }
