@@ -6,7 +6,7 @@ function Layouts({ children }) {
   return (<>
 
     <Header />
-      <main className="min-h-[calc(100vh-200px)] md:min-h-[calc(100vh-215px)] lg:min-h-[calc(100vh-175px)]">{children}</main>
+      <main className="min-h-[calc(100vh-165px)] md:min-h-[calc(100vh-180px)] lg:min-h-[calc(100vh-135px)]">{children}</main>
     <Footer />
     
   </>);
