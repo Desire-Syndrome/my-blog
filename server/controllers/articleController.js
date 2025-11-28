@@ -24,7 +24,7 @@ const getArticles = AsyncHandler(async (req, res) => {
 	const skip = (page - 1) * limit;
 
 	const articles = await Article.find(filteredArticles).sort({ _id: -1 })
-		.populate("author", "name avatar")
+		.populate("author", "name image")
 		.skip(skip).limit(limit);
 
 	if (articles.length === 0) {
@@ -45,13 +45,13 @@ const getArticle = AsyncHandler(async (req, res) => {
 	const articleId = req.params.articleId;
 
 	const article = await Article.findById(articleId)
-		.populate("author", "name avatar");
+		.populate("author", "name image");
 	if (!article) {
 		return res.status(404).json({ message: "Article not found." });
 	}
 
 	const reviews = await Review.find({ article: articleId })
-		.populate("user", "name avatar");
+		.populate("user", "name image");
 
 	return res.status(200).json({
 		article, reviews
