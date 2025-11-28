@@ -2,6 +2,7 @@ import {
 	ARTICLE_GET_ALL_REQ, ARTICLE_GET_ALL_SUCCESS, ARTICLE_GET_ALL_FAIL, ARTICLE_GET_ALL_RESET,
 	ARTICLE_POST_REQ, ARTICLE_POST_SUCCESS, ARTICLE_POST_FAIL, ARTICLE_POST_RESET,
 	ARTICLE_GET_REQ, ARTICLE_GET_SUCCESS, ARTICLE_GET_FAIL, ARTICLE_GET_RESET,
+	ARTICLE_GET_BY_USER_REQ, ARTICLE_GET_BY_USER_SUCCESS, ARTICLE_GET_BY_USER_FAIL, ARTICLE_GET_BY_USER_RESET
 } from "../constants/articleConstants";
 
 
@@ -15,7 +16,6 @@ export const articlesGetAllReducer = (state = initialArticleGetAllState, action)
 			return { 
 				loading: false, articles: action.payload.articles,
 				page: action.payload.page, totalPages: action.payload.totalPages, totalArticles: action.payload.totalArticles
-
 			 }
 		case ARTICLE_GET_ALL_FAIL: 
 			return { ...state, loading: false, error: action.payload }
@@ -49,6 +49,25 @@ export const articleGetReducer = (state = {}, action) => {
 			return { loading: false, error: action.payload }
 		case ARTICLE_GET_RESET:
 			return {};
+		default: return state
+	}
+}
+
+const initialArticleGetByUserState = { articles: [], loading: false, error: null }
+
+export const articlesGetByUserReducer = (state = initialArticleGetByUserState, action) => {
+	switch (action.type) {
+		case ARTICLE_GET_BY_USER_REQ:
+			return { ...state, loading: true}
+		case ARTICLE_GET_BY_USER_SUCCESS: 
+			return { 
+				loading: false, articles: action.payload.articles,
+				page: action.payload.page, totalPages: action.payload.totalPages, totalArticles: action.payload.totalArticles
+			 }
+		case ARTICLE_GET_BY_USER_FAIL: 
+			return { ...state, loading: false, error: action.payload }
+		case ARTICLE_GET_BY_USER_RESET:
+			return initialArticleGetByUserState;
 		default: return state
 	}
 }
