@@ -65,18 +65,18 @@ const MyArticles = () => {
 				articles.map((article, i) => (
 					<div key={i} className='flex items-center py-4 border-t border-sky-200 first-of-type:border-none'>
 						<div className='w-2/12'>
-							<img className='w-full h-20 object-cover' alt="Article Image" src={article.image ? `${BASE_URL}${article.image}` : assetsImages.no_image} />
+							<img className='w-full h-12 md:h-16 lg:h-20 object-cover' alt="Article Image" src={article.image ? `${BASE_URL}${article.image}` : assetsImages.no_image} />
 						</div>
-						<div className='w-6/12 px-4 text-center'>
+						<div className='w-9/12 md:w-7/12 lg:w-6/12 px-4 text-center'>
 							<Link to={`/article/${article._id}`} className='block text-sky-900 hover:text-sky-500 transition duration-300 ease-in-out' >
 								{article.title.slice(0, 100)}
 							</Link>
 						</div>
-						<div className="w-1/12 flex items-center justify-center">
+						<div className="hidden md:w-2/12 lg:w-1/12 md:flex items-center justify-center">
 							<img src={assetsImages.star} className='w-5 h-5' alt="Star" />
 							<p className='ms-2 '>{Number(article.rating).toFixed(0)} / 5</p>
 						</div>
-						<div className='w-2/12 text-center'>
+						<div className='hidden w-2/12 lg:block text-center'>
 							<p>{article.category}</p>
 						</div>
 						<div className='w-1/12 relative inline-block text-left group'>
