@@ -67,7 +67,7 @@ const MyArticles = () => {
 						<div className='w-2/12'>
 							<img className='w-full h-12 md:h-16 lg:h-20 object-cover' alt="Article Image" src={article.image ? `${BASE_URL}${article.image}` : assetsImages.no_image} />
 						</div>
-						<div className='w-9/12 md:w-7/12 lg:w-6/12 px-4 text-center'>
+						<div className='w-9/12 md:w-7/12 lg:w-6/12 px-2 lg:px-4 text-center'>
 							<Link to={`/article/${article._id}`} className='block text-sky-900 hover:text-sky-500 transition duration-300 ease-in-out' >
 								{article.title.slice(0, 100)}
 							</Link>
