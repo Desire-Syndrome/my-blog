@@ -29,7 +29,7 @@ const Blog = () => {
 	// page pagination
 	const initialPage = Number(searchParams.get("page")) || 1;
 	const [currentPage, setCurrentPage] = useState(initialPage);
-	const articlesPerPage = 12;
+	const articlesPerPage = 2;
 
 	// redux
 	const dispatch = useDispatch();
@@ -42,6 +42,7 @@ const Blog = () => {
 		dispatch(articlesGetAllAction(currentPage, articlesPerPage, selectedCategories, searchByTitle));
 	}, [dispatch, currentPage, articlesPerPage, selectedCategories, searchByTitle]);
 
+
 	// filter jobs
 	const handleCategoryChange = (category) => {
 		setSelectedCategories(prev => prev.includes(category) ? prev.filter(c => c !== category) : [...prev, category]);
@@ -53,6 +54,7 @@ const Blog = () => {
 		setIsSearched(true);
 		setCurrentPage(1);
 	}
+
 
 	// get params from url
 	useEffect(() => {
@@ -74,8 +76,13 @@ const Blog = () => {
 		if (selectedCategories.length > 0) params.categories = selectedCategories.join(',');
 		if (searchByTitle) params.title = searchByTitle;
 
-		setSearchParams(params);
-	}, [currentPage, selectedCategories, searchByTitle, setSearchParams]);
+		const currentParams = searchParams.toString();
+		const newParams = new URLSearchParams(params).toString();
+
+		if (currentParams !== newParams) {
+			setSearchParams(params);
+		}
+	}, [currentPage, selectedCategories, searchByTitle, setSearchParams, searchParams]);
 
 	// switch pages
 	const nextPage = () => {
