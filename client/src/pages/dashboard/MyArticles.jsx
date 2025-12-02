@@ -59,8 +59,8 @@ const MyArticles = () => {
 
 	return (
 
-		<div className='container py-8 max-w-4xl'>
-
+		<section className='container py-8 max-w-4xl'>
+			<h2 className='mb-2 font-medium  text-gray-800 text-base md:text-lg'>Published articles: {totalArticles ? totalArticles : "0"}</h2>
 			{articles && !articlesLoading && (
 				articles.map((article, i) => (
 					<div key={i} className='flex items-center py-4 border-t border-sky-200 first-of-type:border-none'>
@@ -90,7 +90,22 @@ const MyArticles = () => {
 				))
 			)}
 
-		</div>
+			{articlesError &&
+				<p className="w-full mt-3 py-3 max-[500px]:text-xs text-sm lg:text-base text-center rounded-md bg-rose-100 border border-rose-300">{articlesError}</p>
+			}
+
+			{totalPages > 1 &&
+					<div className="flex flex-col items-center mt-6">
+						<span className="mb-2">Page {currentPage} / {totalPages}</span>
+						<div className="flex gap-2 text-md">
+							<button onClick={prevPage} disabled={currentPage === 1}
+								className="bg-sky-600 rounded-full px-4 py-1 text-white hover:bg-sky-500 transition duration-300 ease-in-out disabled:bg-gray-400 disabled:hover:bg-gray-400">Prev</button>
+							<button onClick={nextPage} disabled={currentPage === totalPages}
+								className="bg-sky-600 rounded-full px-4 py-1 text-white hover:bg-sky-500 transition duration-300 ease-in-out disabled:bg-gray-400 disabled:hover:bg-gray-400">Next</button>
+						</div>
+					</div>
+				}
+		</section>
 
 	)
 }
