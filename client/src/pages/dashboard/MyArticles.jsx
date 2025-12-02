@@ -17,7 +17,7 @@ const MyArticles = () => {
 	// page pagination
 	const initialPage = Number(searchParams.get("page")) || 1;
 	const [currentPage, setCurrentPage] = useState(initialPage);
-	const articlesPerPage = 12;
+	const articlesPerPage = 20;
 
 	// redux
 	const dispatch = useDispatch();
