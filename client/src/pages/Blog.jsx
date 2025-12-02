@@ -48,6 +48,7 @@ const Blog = () => {
 		setSelectedCategories(prev => prev.includes(category) ? prev.filter(c => c !== category) : [...prev, category]);
 		setCurrentPage(1);
 	}
+
 	const onSearch = () => {
 		setSearchByTitle(titleRef.current.value);
 		titleRef.current.value = "";
@@ -69,20 +70,24 @@ const Blog = () => {
 	}, [searchParams]);
 
 	// change url params
+	const isFirstRender = useRef(true);
 	useEffect(() => {
-		const params = {};
+		if (isFirstRender.current) {
+			isFirstRender.current = false;
+			return;
+		}
 
+		const params = {};
 		if (currentPage > 1) params.page = currentPage;
 		if (selectedCategories.length > 0) params.categories = selectedCategories.join(',');
 		if (searchByTitle) params.title = searchByTitle;
 
-		const currentParams = searchParams.toString();
 		const newParams = new URLSearchParams(params).toString();
-
-		if (currentParams !== newParams) {
-			setSearchParams(params);
+		if (searchParams.toString() !== newParams) {
+			setSearchParams(params, { replace: true });
 		}
-	}, [currentPage, selectedCategories, searchByTitle, setSearchParams, searchParams]);
+	}, [currentPage, selectedCategories, searchByTitle]);
+
 
 	// switch pages
 	const nextPage = () => {
