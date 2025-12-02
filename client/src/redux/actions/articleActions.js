@@ -4,9 +4,11 @@ import axios from 'axios';
 
 import {
 	ARTICLE_GET_ALL_REQ, ARTICLE_GET_ALL_SUCCESS, ARTICLE_GET_ALL_FAIL,
-	ARTICLE_POST_REQ, ARTICLE_POST_SUCCESS, ARTICLE_POST_FAIL,
-	ARTICLE_GET_REQ, ARTICLE_GET_SUCCESS, ARTICLE_GET_FAIL,
+	ARTICLE_GET_REQ, ARTICLE_GET_SUCCESS, ARTICLE_GET_FAIL, 
 	ARTICLE_GET_BY_USER_REQ, ARTICLE_GET_BY_USER_SUCCESS, ARTICLE_GET_BY_USER_FAIL,
+	ARTICLE_POST_REQ, ARTICLE_POST_SUCCESS, ARTICLE_POST_FAIL,
+	ARTICLE_UPDATE_REQ, ARTICLE_UPDATE_SUCCESS, ARTICLE_UPDATE_FAIL, 
+	ARTICLE_DELETE_REQ, ARTICLE_DELETE_SUCCESS, ARTICLE_DELETE_FAIL
 } from "../constants/articleConstants";
 
 
@@ -34,6 +36,51 @@ export const articlesGetAllAction = (page = 1, limit = 12, categories = [], titl
 		});
 	}
 };
+
+
+export const articleGetAction = (id) => async (dispatch) => {
+	try {
+		dispatch({
+			type: ARTICLE_GET_REQ
+		});
+
+		const { data } = await axios.get(`${BASE_URL}/api/article/get-by-id/${id}`)
+		dispatch({
+			type: ARTICLE_GET_SUCCESS,
+			payload: data
+		});
+	} catch (error) {
+		dispatch({
+			type: ARTICLE_GET_FAIL,
+			payload: error.response && error.response.data.message ? error.response.data.message : error.message
+		});
+	}
+
+}
+
+export const articlesGetByUserAction = (id, page = 1, limit = 12) => async (dispatch) => {
+	try {
+		dispatch({
+			type: ARTICLE_GET_BY_USER_REQ
+		});
+
+		const params = new URLSearchParams();
+		params.append("page", page);
+		params.append("limit", limit);
+
+		const { data } = await axios.get(`${BASE_URL}/api/article/get-by-user/${id}?${params.toString()}`);
+		dispatch({
+			type: ARTICLE_GET_BY_USER_SUCCESS,
+			payload: data
+		});
+	} catch (error) {
+		dispatch({
+			type: ARTICLE_GET_BY_USER_FAIL,
+			payload: error.response && error.response.data.message ? error.response.data.message : error.message
+		});
+	}
+};
+
 
 export const articlePostAction = (articleData) => async (dispatch, getState) => {
 	try {
@@ -68,44 +115,34 @@ export const articlePostAction = (articleData) => async (dispatch, getState) => 
 	}
 }
 
-export const articleGetAction = (id) => async (dispatch) => {
+
+export const articleDeleteAction = (id) => async (dispatch, getState) => {
 	try {
 		dispatch({
-			type: ARTICLE_GET_REQ
+			type: ARTICLE_DELETE_REQ
 		});
 
-		const { data } = await axios.get(`${BASE_URL}/api/article/get-by-id/${id}`)
-		dispatch({
-			type: ARTICLE_GET_SUCCESS,
-			payload: data
-		});
+		const userInfo = getState().userLoginReducer.userInfo; 
+		if (!userInfo || !userInfo.token) {
+			throw new Error("User not authenticated");
+		}
+
+		const config = { 
+			headers: { Authorization: `Bearer ${userInfo.token}` } 
+		};
+
+		await axios.delete(`${BASE_URL}/api/article/delete/${id}`, config) 
+		setTimeout(() => {
+			dispatch({
+				type: ARTICLE_DELETE_SUCCESS
+			});
+		}, 1500);
 	} catch (error) {
-		dispatch({
-			type: ARTICLE_GET_FAIL,
-			payload: error.response && error.response.data.message ? error.response.data.message : error.message
-		});
+		setTimeout(() => {
+			dispatch({ 
+				type: ARTICLE_DELETE_FAIL,
+				payload: error.response && error.response.data.message ? error.response.data.message : error.message
+			});
+		}, 1500);
 	}
 }
-
-export const articlesGetByUserAction = (id, page = 1, limit = 12) => async (dispatch) => {
-	try {
-		dispatch({
-			type: ARTICLE_GET_BY_USER_REQ
-		});
-
-		const params = new URLSearchParams();
-		params.append("page", page);
-		params.append("limit", limit);
-
-		const { data } = await axios.get(`${BASE_URL}/api/article/get-by-user/${id}?${params.toString()}`);
-		dispatch({
-			type: ARTICLE_GET_BY_USER_SUCCESS,
-			payload: data
-		});
-	} catch (error) {
-		dispatch({
-			type: ARTICLE_GET_BY_USER_FAIL,
-			payload: error.response && error.response.data.message ? error.response.data.message : error.message
-		});
-	}
-};
