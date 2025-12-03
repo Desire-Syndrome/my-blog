@@ -74,12 +74,7 @@ const getUserArticles = AsyncHandler(async (req, res) => {
 
 	const articles = await Article.find({ author: userId }).sort({ _id: -1 })
 		.skip(skip).limit(limit);
-	if (articles.length === 0) {
-		return res.status(404).json({ articles: [],
-			totalPages: Math.ceil(totalFilteredArticles / limit), page, totalArticles
-		 });
-	}
-
+ 
 	return res.status(200).json({
 		articles,
 		totalPages: Math.ceil(totalArticles / limit), page, totalArticles
