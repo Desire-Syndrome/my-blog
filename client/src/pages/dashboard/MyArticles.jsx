@@ -22,9 +22,9 @@ const MyArticles = () => {
 	// redux
 	const dispatch = useDispatch();
 	const articlesGetByUserReducer = useSelector((state) => state.articlesGetByUserReducer);
-	const { loading: articlesLoading, error: articlesError, articles = [], totalPages, totalArticles } = articlesGetByUserReducer;
+	const { loading: getLoading, error: getError, articles = [], totalPages, totalArticles } = articlesGetByUserReducer;
 	const articleDeleteReducer = useSelector((state) => state.articleDeleteReducer);
-	const { success: articleDeleteSuccess, error: articleDeleteError } = articleDeleteReducer;
+	const { loading: deleteLoading, success: deleteSuccess, error: deleteError } = articleDeleteReducer;
 
 	const { userInfo } = useSelector((state) => state.userLoginReducer);
 
@@ -68,12 +68,12 @@ const MyArticles = () => {
 
 	// delete article
 		useEffect(() => {
-		if (articleDeleteSuccess) {
+		if (deleteSuccess) {
 			setModalMessage("Article has been successfully deleted!");
-		} else if (articleDeleteError) {
-			setModalMessage(articleDeleteError);
+		} else if (deleteError) {
+			setModalMessage(deleteError);
 		}
-	}, [dispatch, articleDeleteSuccess, articleDeleteError]);
+	}, [dispatch, deleteSuccess, deleteError]);
 	
 	const deleteHandler = () => {
 		setModalMessage("Are you sure you want to delete this article?");
@@ -96,7 +96,7 @@ const MyArticles = () => {
 
 		<section className='container py-8 max-w-4xl'>
 			<h2 className='mb-2 font-medium  text-gray-800 text-base md:text-lg'>Published articles: {totalArticles ? totalArticles : "0"}</h2>
-			{articles && !articlesLoading && (
+			{articles.length > 0  && !getLoading && (
 				articles.map((article, i) => (
 					<div key={i} className='flex items-center py-4 border-t border-sky-200 first-of-type:border-none'>
 						<div className='w-2/12'>
@@ -127,8 +127,8 @@ const MyArticles = () => {
 				))
 			)}
 
-			{articles.length > 0 && articlesError && (
-				<p className="w-full mt-3 py-3 max-[500px]:text-xs text-sm lg:text-base text-center rounded-md bg-rose-100 border border-rose-300">{articlesError}</p>
+			{getError && (
+				<p className="w-full mt-3 py-3 max-[500px]:text-xs text-sm lg:text-base text-center rounded-md bg-rose-100 border border-rose-300">{getError}</p>
 			)}
 
 			{totalPages > 1 &&
@@ -152,11 +152,11 @@ const MyArticles = () => {
 					<div className="px-6 py-4 border-b border-gray-200"><h5 className="text-lg font-semibold text-sky-600">Confirmation</h5></div>
 					<div className="px-6 py-4"><p className="text-gray-700">{modalMessage}</p></div>
 					<div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
-						{!articleDeleteSuccess ? (<>
-						<button onClick={() => { setModalVisible(false); dispatch({ type: "ARTICLE_DELETE_RESET" }); setArticleToDelete(null); }}
+						{!deleteSuccess ? (<>
+						<button onClick={() => { setModalVisible(false); dispatch({ type: "ARTICLE_DELETE_RESET" }); setArticleToDelete(null); }} disabled={deleteLoading}
 							type="button" className="text-sm font-medium px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 transition duration-300 ease-in-out">Cancel</button>
-						<button onClick={confirmDeleteHandler}
-							type="button" className="text-white text-sm font-medium px-4 py-2 rounded bg-sky-600 hover:bg-sky-500 transition duration-300 ease-in-out">Yes, Delete</button>
+						<button onClick={confirmDeleteHandler} disabled={deleteLoading}
+							type="button" className="text-white text-sm font-medium px-4 py-2 rounded bg-sky-600 hover:bg-sky-500 transition duration-300 ease-in-out">{!deleteLoading ? "Yes, Delete": "Loading..."}</button>
 						</>) : (
 							<button onClick={exitAfterDeleteHandler}
 								type="button" className="text-white text-sm font-medium px-4 py-2 rounded bg-sky-600 hover:bg-sky-500 transition duration-300 ease-in-out">OK</button>
