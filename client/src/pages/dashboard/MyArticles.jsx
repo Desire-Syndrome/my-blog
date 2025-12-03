@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom"
 
 import { useDispatch, useSelector } from "react-redux";
-import { articlesGetByUserAction } from "../../redux/actions/articleActions.js"
+import { articlesGetByUserAction, articleDeleteAction } from "../../redux/actions/articleActions.js"
 
 
 const MyArticles = () => {
@@ -23,16 +23,24 @@ const MyArticles = () => {
 	const dispatch = useDispatch();
 	const articlesGetByUserReducer = useSelector((state) => state.articlesGetByUserReducer);
 	const { loading: articlesLoading, error: articlesError, articles = [], totalPages, totalArticles } = articlesGetByUserReducer;
+	const articleDeleteReducer = useSelector((state) => state.articleDeleteReducer);
+	const { success: articleDeleteSuccess, error: articleDeleteError } = articleDeleteReducer;
 
 	const { userInfo } = useSelector((state) => state.userLoginReducer);
 
+	// delete article
+	const [modalVisible, setModalVisible] = useState(false);
+	const [articleToDelete, setArticleToDelete] = useState(null);
+	const [modalMessage, setModalMessage] = useState("");
 
+
+	// get articles
 	useEffect(() => {
 		if (userInfo) {
-			dispatch({ type: "USER_APPLICATIONS_RESET" });
+			dispatch({ type: "ARTICLE_GET_BY_USER_RESET" });
 			dispatch(articlesGetByUserAction(userInfo._id, currentPage, articlesPerPage));
 		}
-	}, [dispatch, userInfo, currentPage, articlesPerPage]);
+	}, [dispatch, userInfo, currentPage]);
 
 
 	// get params from url
@@ -48,6 +56,7 @@ const MyArticles = () => {
 		setSearchParams(params);
 	}, [currentPage, setSearchParams]);
 
+
 	// switch pages
 	const nextPage = () => {
 		if (currentPage < totalPages) { setCurrentPage((prev) => prev + 1); }
@@ -57,7 +66,33 @@ const MyArticles = () => {
 	};
 
 
-	return (
+	// delete article
+		useEffect(() => {
+		if (articleDeleteSuccess) {
+			setModalMessage("Article has been successfully deleted!");
+		} else if (articleDeleteError) {
+			setModalMessage(articleDeleteError);
+		}
+	}, [dispatch, articleDeleteSuccess, articleDeleteError]);
+	
+	const deleteHandler = () => {
+		setModalMessage("Are you sure you want to delete this article?");
+		setModalVisible(true);
+	};
+
+	const confirmDeleteHandler = () => {
+			dispatch(articleDeleteAction(articleToDelete));
+	};
+
+	const exitAfterDeleteHandler = () => {
+		dispatch(articlesGetByUserAction(userInfo._id, currentPage, articlesPerPage));
+		dispatch({ type: "ARTICLE_DELETE_RESET" });
+		setModalVisible(false);
+		setArticleToDelete(null);
+	};
+
+
+	return (<>
 
 		<section className='container py-8 max-w-4xl'>
 			<h2 className='mb-2 font-medium  text-gray-800 text-base md:text-lg'>Published articles: {totalArticles ? totalArticles : "0"}</h2>
@@ -82,32 +117,57 @@ const MyArticles = () => {
 						<div className='w-1/12 relative inline-block text-left group'>
 							<button className='text-gray-500 action-button text-lg'>•••</button>
 							<div className='z-10 hidden absolute right-0 lg:left-0 top-0 w-24 lg:w-28 bg-white border border-gray-200 shadow rounded group-hover:block'>
-								<button className='block w-full text-left px-4 py-2 text-sky-500 hover:bg-gray-200'>Update</button>
-								<button className='block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-200'>Remove</button>
+								<button
+									className='block w-full text-left px-4 py-2 text-sky-500 hover:bg-gray-200'>Update</button>
+								<button onClick={() => { deleteHandler(); setArticleToDelete(article._id); }}
+									className='block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-200'>Delete</button>
 							</div>
 						</div>
 					</div>
 				))
 			)}
 
-			{articlesError &&
+			{articles.length > 0 && articlesError && (
 				<p className="w-full mt-3 py-3 max-[500px]:text-xs text-sm lg:text-base text-center rounded-md bg-rose-100 border border-rose-300">{articlesError}</p>
-			}
+			)}
 
 			{totalPages > 1 &&
-					<div className="flex flex-col items-center mt-6">
-						<span className="mb-2">Page {currentPage} / {totalPages}</span>
-						<div className="flex gap-2 text-md">
-							<button onClick={prevPage} disabled={currentPage === 1}
-								className="bg-sky-600 rounded-full px-4 py-1 text-white hover:bg-sky-500 transition duration-300 ease-in-out disabled:bg-gray-400 disabled:hover:bg-gray-400">Prev</button>
-							<button onClick={nextPage} disabled={currentPage === totalPages}
-								className="bg-sky-600 rounded-full px-4 py-1 text-white hover:bg-sky-500 transition duration-300 ease-in-out disabled:bg-gray-400 disabled:hover:bg-gray-400">Next</button>
-						</div>
+				<div className="flex flex-col items-center mt-6">
+					<span className="mb-2">Page {currentPage} / {totalPages}</span>
+					<div className="flex gap-2 text-md">
+						<button onClick={prevPage} disabled={currentPage === 1}
+							className="bg-sky-600 rounded-full px-4 py-1 text-white hover:bg-sky-500 transition duration-300 ease-in-out disabled:bg-gray-400 disabled:hover:bg-gray-400">Prev</button>
+						<button onClick={nextPage} disabled={currentPage === totalPages}
+							className="bg-sky-600 rounded-full px-4 py-1 text-white hover:bg-sky-500 transition duration-300 ease-in-out disabled:bg-gray-400 disabled:hover:bg-gray-400">Next</button>
 					</div>
-				}
+				</div>
+			}
 		</section>
 
-	)
+
+		{modalVisible && (<>
+			<div className="fixed inset-0 bg-black bg-opacity-50 z-40" />
+			<div className="fixed inset-0 flex items-center justify-center z-50">
+				<div className="bg-white rounded-lg shadow-lg w-full max-w-md">
+					<div className="px-6 py-4 border-b border-gray-200"><h5 className="text-lg font-semibold text-sky-600">Confirmation</h5></div>
+					<div className="px-6 py-4"><p className="text-gray-700">{modalMessage}</p></div>
+					<div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+						{!articleDeleteSuccess ? (<>
+						<button onClick={() => { setModalVisible(false); dispatch({ type: "ARTICLE_DELETE_RESET" }); setArticleToDelete(null); }}
+							type="button" className="text-sm font-medium px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 transition duration-300 ease-in-out">Cancel</button>
+						<button onClick={confirmDeleteHandler}
+							type="button" className="text-white text-sm font-medium px-4 py-2 rounded bg-sky-600 hover:bg-sky-500 transition duration-300 ease-in-out">Yes, Delete</button>
+						</>) : (
+							<button onClick={exitAfterDeleteHandler}
+								type="button" className="text-white text-sm font-medium px-4 py-2 rounded bg-sky-600 hover:bg-sky-500 transition duration-300 ease-in-out">OK</button>
+						)}
+					</div>
+				</div>
+			</div>
+		</>)
+		}
+
+	</>)
 }
 
 export default MyArticles
