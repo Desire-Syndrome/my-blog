@@ -136,13 +136,49 @@ export const articleDeleteAction = (id) => async (dispatch, getState) => {
 			dispatch({
 				type: ARTICLE_DELETE_SUCCESS
 			});
-		}, 1500);
+		}, 500);
 	} catch (error) {
 		setTimeout(() => {
 			dispatch({ 
 				type: ARTICLE_DELETE_FAIL,
 				payload: error.response && error.response.data.message ? error.response.data.message : error.message
 			});
-		}, 1500);
+		}, 500);
+	}
+}
+
+
+export const articleUpdateAction = (id, updatedData) => async (dispatch, getState) => {
+	try {
+		dispatch({ 
+			type: ARTICLE_UPDATE_REQ 
+		});
+
+		const userInfo = getState().userLoginReducer.userInfo;
+		if (!userInfo || !userInfo.token) {
+			throw new Error("User not authenticated");
+		}
+
+		const config = {  
+			headers: {
+				Authorization: `Bearer ${userInfo.token}`, 
+				"Content-Type": "multipart/form-data" 
+			}
+		}
+
+		await Promise.all([
+			axios.put(`${BASE_URL}/api/article/update/${id}`, updatedData, config).then(res => res.data), 
+			new Promise((resolve) => setTimeout(resolve, 500))
+		]);
+		dispatch({ 
+			type: ARTICLE_UPDATE_SUCCESS
+		});
+	} catch (error) { 
+		setTimeout(() => {
+			dispatch({ 
+				type: ARTICLE_UPDATE_FAIL,
+				payload: error.response && error.response.data.message ? error.response.data.message : error.message
+			});
+		}, 500);
 	}
 }

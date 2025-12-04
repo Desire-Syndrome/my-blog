@@ -15,7 +15,7 @@ userGetByIdReducer, userBanReducer, userUnbanReducer,
 } from "./reducers/userReducer";
 import {
 articlesGetAllReducer, articleGetReducer, articlesGetByUserReducer,
-articlePostReducer, articleDeleteReducer, 
+articlePostReducer, articleDeleteReducer, articleUpdateReducer 
 } from "./reducers/articleReducer";
 
 
@@ -23,7 +23,7 @@ const rootReducer = combineReducers({
 userRegisterReducer, userLoginReducer, userUpdateReducer, userDeleteReducer,
 userGetByIdReducer, userBanReducer, userUnbanReducer,
 articlesGetAllReducer, articleGetReducer, articlesGetByUserReducer,
-articlePostReducer, articleDeleteReducer, 
+articlePostReducer, articleDeleteReducer, articleUpdateReducer
 });
 
 
