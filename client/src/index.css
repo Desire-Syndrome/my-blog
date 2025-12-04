@@ -14,10 +14,10 @@ input.no-focus:focus {
   box-shadow: none;
 }
 
-.rich-text p {margin: 16px 0; font-size: 15px; color: #333333;}
-.rich-text h1 {font-size: 36px; font-weight: 800; color: #252525; margin: 16px 0;}
-.rich-text h2 {font-size: 22px; font-weight: 700; color: #252525; margin: 16px 0;}
-.rich-text h3 {font-size: 18px; font-weight: 600; color: #333333; margin: 16px 0;}
+.rich-text p, .ql-editor p {margin: 16px 0 !important; font-size: 15px; color: #333333;}
+.rich-text h1, .ql-editor h1 {font-size: 36px; font-weight: 800; color: #252525; margin: 16px 0 !important;;}
+.rich-text h2, .ql-editor h2 {font-size: 22px; font-weight: 700; color: #252525; margin: 16px 0 !important;;}
+.rich-text h3, .ql-editor h3 {font-size: 18px; font-weight: 600; color: #333333; margin: 16px 0 !important;;}
 .rich-text h4 {font-size: 16px; font-weight: 500; color: #444444; margin: 16px 0;}
 .rich-text h5 {font-size: 14px; font-weight: 400; color: #555555; margin: 16px 0;}
 .rich-text h6 {font-size: 12px; font-weight: 400; color: #666666; margin: 16px 0;}
