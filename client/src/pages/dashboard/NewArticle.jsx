@@ -117,7 +117,7 @@ const NewArticle = () => {
 				<div className='my-quil' ref={editorRef}></div>
 			</div>
 			<div className='flex gap-2 w-full max-w-3xl mt-4 items-center'>
-					<p className='w-32'>Article Category</p>
+					<p className='w-20'>Category</p>
 					<select onChange={e => setCategory(e.target.value)} className='x-3 py-2 border-2 border-gray-300'>
 						{articlesCategories.map((category, i) => (
 							<option value={category} key={i}>{category}</option>
