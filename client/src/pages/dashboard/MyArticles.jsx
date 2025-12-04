@@ -1,7 +1,7 @@
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 import { assetsImages } from '../../assets/images-data.js'
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
 
@@ -50,11 +50,21 @@ const MyArticles = () => {
 	}, [searchParams]);
 
 	// change url params
+	const isFirstRender = useRef(true);
 	useEffect(() => {
+				if (isFirstRender.current) {
+			isFirstRender.current = false;
+			return;
+		}
+
 		const params = {};
 		if (currentPage > 1) params.page = currentPage;
-		setSearchParams(params);
-	}, [currentPage, setSearchParams]);
+
+		const newParams = new URLSearchParams(params).toString();
+		if (searchParams.toString() !== newParams) {
+		setSearchParams(params, { replace: true });
+		}
+	}, [currentPage]);
 
 
 	// switch pages
