@@ -9,6 +9,7 @@ import Blog from './pages/Blog'
 import Article from './pages/Article'
 import Dashboard from './pages/Dashboard'
 import NewArticle from './pages/dashboard/NewArticle'
+import UpdateArticle from './pages/dashboard/UpdateArticle'
 import MyArticles from './pages/dashboard/MyArticles'
 import EditProfile from './pages/dashboard/EditProfile'
 
@@ -29,6 +30,7 @@ function App() {
         <Route exact path="/article/:id" element={<Article />}></Route>
         <Route exact path='/dashboard' element={userInfo ? <Dashboard /> : <Navigate to="/" />}>
           <Route exact path='new-article' element={<NewArticle />} />
+          <Route exact path='update-article' element={<UpdateArticle />} />
           <Route exact path='my-articles' element={<MyArticles />} />
           <Route exact path='edit-profile' element={<EditProfile />} />
         </Route>
