@@ -3,15 +3,15 @@ import { assetsImages } from '../../assets/images-data.js'
 
 import { useEffect, useState } from "react";
 
-import { Link, useSearchParams } from "react-router-dom"
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
 
 import { useDispatch, useSelector } from "react-redux";
-import { articlesGetByUserAction, articleDeleteAction } from "../../redux/actions/articleActions.js"
+import { articlesGetByUserAction, articleDeleteAction, articleGetAction } from "../../redux/actions/articleActions.js"
 
 
 const MyArticles = () => {
 
-	// url params
+	const navigate = useNavigate();
 	const [searchParams, setSearchParams] = useSearchParams();
 
 	// page pagination
@@ -92,6 +92,13 @@ const MyArticles = () => {
 	};
 
 
+	// update article
+	const updateHandler = (articleId) => {
+		dispatch(articleGetAction(articleId));
+		navigate("/dashboard/update-article");
+	};
+
+
 	return (<>
 
 		<section className='container py-8 max-w-4xl'>
@@ -117,7 +124,7 @@ const MyArticles = () => {
 						<div className='w-1/12 relative inline-block text-left group'>
 							<button className='text-gray-500 action-button text-lg'>•••</button>
 							<div className='z-10 hidden absolute right-0 lg:left-0 top-0 w-24 lg:w-28 bg-white border border-gray-200 shadow rounded group-hover:block'>
-								<button
+								<button onClick={() => updateHandler(article._id)}
 									className='block w-full text-left px-4 py-2 text-sky-500 hover:bg-gray-200'>Update</button>
 								<button onClick={() => { deleteHandler(); setArticleToDelete(article._id); }}
 									className='block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-200'>Delete</button>
