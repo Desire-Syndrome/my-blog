@@ -35,7 +35,7 @@ export const articlesGetAllAction = (page = 1, limit = 12, categories = [], titl
 			payload: error.response && error.response.data.message ? error.response.data.message : error.message
 		});
 	}
-};
+}
 
 
 export const articleGetAction = (id) => async (dispatch) => {
@@ -55,7 +55,6 @@ export const articleGetAction = (id) => async (dispatch) => {
 			payload: error.response && error.response.data.message ? error.response.data.message : error.message
 		});
 	}
-
 }
 
 export const articlesGetByUserAction = (id, page = 1, limit = 12) => async (dispatch) => {
@@ -79,7 +78,7 @@ export const articlesGetByUserAction = (id, page = 1, limit = 12) => async (disp
 			payload: error.response && error.response.data.message ? error.response.data.message : error.message
 		});
 	}
-};
+}
 
 
 export const articlePostAction = (articleData) => async (dispatch, getState) => {

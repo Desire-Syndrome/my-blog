@@ -10,7 +10,7 @@ import {
 	USER_GET_BY_ID_REQ, USER_GET_BY_ID_SUCCESS, USER_GET_BY_ID_FAIL, USER_GET_BY_ID_RESET,
 	USER_BAN_REQ, USER_BAN_SUCCESS, USER_BAN_FAIL, USER_BAN_RESET,
 	USER_UNBAN_REQ, USER_UNBAN_SUCCESS, USER_UNBAN_FAIL, USER_UNBAN_RESET
-} from "../constants/UserConstants";
+} from "../constants/userConstants";
 
 
 export const userRegisterAction = (name, email, password, avatar) => async (dispatch) => {
@@ -157,16 +157,31 @@ try {
 }
 
 
-export const userGetByIdAction = (userId) => async (dispatch) => {
+export const userGetByIdAction = (id) => async (dispatch) => {
+	try {
+		dispatch({
+			type: USER_GET_BY_ID_REQ
+		});
+
+		const { data } = await axios.get(`${BASE_URL}/api/user/get-by-id/${id}`)
+		dispatch({
+			type: USER_GET_BY_ID_SUCCESS,
+			payload: data
+		});
+	} catch (error) {
+		dispatch({
+			type: USER_GET_BY_ID_FAIL,
+			payload: error.response && error.response.data.message ? error.response.data.message : error.message
+		});
+	}
+}
+
+
+export const userBanAction = (id, days) => async (dispatch) => {
 
 }
 
 
-export const userBanAction = (userId, days) => async (dispatch) => {
-
-}
-
-
-export const userUnbanAction = (userId) => async (dispatch) => {
+export const userUnbanAction = (id) => async (dispatch) => {
 
 }

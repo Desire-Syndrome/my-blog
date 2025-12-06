@@ -67,18 +67,16 @@ export const userDeleteReducer = (state = {}, action) => {
 }
 
 
-const userGetByIdInitialState = { userInfo: {} };
-
-export const userGetByIdReducer = (state = userGetByIdInitialState, action) => {
+export const userGetByIdReducer = (state = {}, action) => {
 	switch (action.type) {
 		case USER_GET_BY_ID_REQ:
 			return { loading: true}
 		case USER_GET_BY_ID_SUCCESS:  
-			return { loading: false, success: true , userInfo: action.payload }
+			return { loading: false, success: true , user: action.payload }
 		case USER_GET_BY_ID_FAIL: 
 			return { loading: false, error: action.payload }
 		case USER_GET_BY_ID_RESET:
-			return { userInfo: {} };
+			return {};
 		default: return state
 	}
 }
@@ -96,7 +94,7 @@ export const userBanReducer = (state = {}, action) => {
       return {};
     default: return state;
   }
-};
+}
 
 
 export const userUnbanReducer = (state = {}, action) => {
@@ -111,4 +109,4 @@ export const userUnbanReducer = (state = {}, action) => {
       return {};
     default: return state;
   }
-};
+}
