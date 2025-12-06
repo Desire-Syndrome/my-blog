@@ -145,9 +145,8 @@ const EditProfile = () => {
 
 
 		{modalVisible && (<>
-			<div className="fixed inset-0 bg-black bg-opacity-50 z-40" />
-			<div className="fixed inset-0 flex items-center justify-center z-50">
-				<div className="bg-white rounded-lg shadow-lg w-full max-w-md">
+			<div onClick={() => { dispatch({ type: "USER_DELETE_RESET" }); setModalVisible(false); }} className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+				<div onClick={(e) => e.stopPropagation()} className="bg-white rounded-lg shadow-lg w-full max-w-md">
 					<div className="px-6 py-4 border-b border-gray-200"><h5 className="text-lg font-semibold text-sky-600">Confirmation</h5></div>
 					<div className="px-6 py-4"><p className="text-gray-700">{modalMessage}</p></div>
 					<div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
