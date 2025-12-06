@@ -90,7 +90,7 @@ const Header = () => {
 
 
 		{showPopup && (
-			<div className="fixed inset-0 bg-white bg-opacity-70 flex items-center justify-center z-100"><div onClick={closePopup} className='fixed inset-0 z-150'></div>
+			<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-100"><div onClick={closePopup} className='fixed inset-0 z-150'></div>
 				<div className="bg-white rounded-lg shadow p-6 w-80 lg:w-96 relative border-sky-600 border-opacity-70 border-2 z-200">
 					<button className="absolute top-2 right-3 text-gray-500" onClick={closePopup}>✕</button>
 					<h2 className="text-lg text-sky-600 text-center font-semibold mb-4">User {popupState}</h2>
