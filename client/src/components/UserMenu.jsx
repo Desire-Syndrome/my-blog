@@ -17,7 +17,6 @@ function UserMenu() {
 		dispatch(userLogoutAction());
 	}
 
-
 	return (
 
 		<div className='flex items-center gap-3'>

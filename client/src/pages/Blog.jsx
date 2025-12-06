@@ -14,36 +14,28 @@ import ArticleCard from '../components/ArticleCard'
 
 const Blog = () => {
 
-	// url params
 	const [searchParams, setSearchParams] = useSearchParams();
 
-	// filters
 	const [showFilters, setShowFilters] = useState(false);
 	const [selectedCategories, setSelectedCategories] = useState([]);
 
-	// search
 	const [isSearched, setIsSearched] = useState(false);
 	const [searchByTitle, setSearchByTitle] = useState("");
 	const titleRef = useRef(null);
 
-	// page pagination
 	const initialPage = Number(searchParams.get("page")) || 1;
 	const [currentPage, setCurrentPage] = useState(initialPage);
 	const articlesPerPage = 24;
 
-	// redux
 	const dispatch = useDispatch();
-	const articlesGetAllReducer = useSelector((state) => state.articlesGetAllReducer);
-	const { loading: articlesLoading, articles = [], totalPages, totalArticles } = articlesGetAllReducer;
+	const { loading: articlesLoading, articles = [], totalPages, totalArticles } = useSelector((state) => state.articlesGetAllReducer);
 
 
-	// get articles
 	useEffect(() => {
 		dispatch(articlesGetAllAction(currentPage, articlesPerPage, selectedCategories, searchByTitle));
 	}, [dispatch, currentPage, articlesPerPage, selectedCategories, searchByTitle]);
 
 
-	// filter jobs
 	const handleCategoryChange = (category) => {
 		setSelectedCategories(prev => prev.includes(category) ? prev.filter(c => c !== category) : [...prev, category]);
 		setCurrentPage(1);
@@ -57,7 +49,6 @@ const Blog = () => {
 	}
 
 
-	// get params from url
 	useEffect(() => {
 		const categoriesFromUrl = searchParams.get("categories")?.split(',') || [];
 		const titleFromUrl = searchParams.get("title") || "";
@@ -69,19 +60,16 @@ const Blog = () => {
 		setCurrentPage(pageFromUrl);
 	}, [searchParams]);
 
-	// change url params
 	const isFirstRender = useRef(true);
 	useEffect(() => {
 		if (isFirstRender.current) {
 			isFirstRender.current = false;
 			return;
 		}
-
 		const params = {};
 		if (currentPage > 1) params.page = currentPage;
 		if (selectedCategories.length > 0) params.categories = selectedCategories.join(',');
 		if (searchByTitle) params.title = searchByTitle;
-
 		const newParams = new URLSearchParams(params).toString();
 		if (searchParams.toString() !== newParams) {
 			setSearchParams(params, { replace: true });
@@ -89,14 +77,12 @@ const Blog = () => {
 	}, [currentPage, selectedCategories, searchByTitle]);
 
 
-	// switch pages
 	const nextPage = () => {
 		if (currentPage < totalPages) { setCurrentPage((prev) => prev + 1); }
 	};
 	const prevPage = () => {
 		if (currentPage > 1) { setCurrentPage((prev) => prev - 1); }
 	};
-
 
 	return (<Layouts>
 

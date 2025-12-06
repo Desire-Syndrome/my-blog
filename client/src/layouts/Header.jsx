@@ -13,13 +13,9 @@ import UserMenu from '../components/UserMenu'
 const Header = () => {
 
 	const dispatch = useDispatch();
-	const userRegisterReducer = useSelector((state) => state.userRegisterReducer);
-	const { loading: userRegisterLoading, error: userRegisterError, success: userRegisterSuccess } = userRegisterReducer;
-	const userLoginReducer = useSelector((state) => state.userLoginReducer);
-	const { loading: userLoginLoading, error: userLoginError, success: userLoginSuccess } = userLoginReducer;
-
-	const { userInfo } = userLoginReducer;
-
+	const { loading: userRegisterLoading, error: userRegisterError, success: userRegisterSuccess } = useSelector((state) => state.userRegisterReducer);
+	const { loading: userLoginLoading, error: userLoginError, success: userLoginSuccess } = useSelector((state) => state.userLoginReducer);
+	const { userInfo } = useSelector((state) => state.userLoginReducer);
 
 	const [popupState, setPopupState] = useState("Login");
 	const [showPopup, setShowPopup] = useState(false);
@@ -55,7 +51,6 @@ const Header = () => {
 		}
 	}, [dispatch, email, password, userRegisterError, userRegisterSuccess, userLoginError, userLoginSuccess, userInfo]);
 
-
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (popupState === "Login") {
@@ -69,7 +64,6 @@ const Header = () => {
 		setImage(null); setName(""); setEmail(""); setPassword("");
 		setPopupState("Login"); setShowPopup(false); 
 	}
-
 
 	return (<>
 

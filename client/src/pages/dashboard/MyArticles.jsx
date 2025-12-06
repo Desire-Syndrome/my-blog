@@ -14,27 +14,20 @@ const MyArticles = () => {
 	const navigate = useNavigate();
 	const [searchParams, setSearchParams] = useSearchParams();
 
-	// page pagination
 	const initialPage = Number(searchParams.get("page")) || 1;
 	const [currentPage, setCurrentPage] = useState(initialPage);
 	const articlesPerPage = 20;
 
-	// redux
 	const dispatch = useDispatch();
-	const articlesGetByUserReducer = useSelector((state) => state.articlesGetByUserReducer);
-	const { loading: getLoading, error: getError, articles = [], totalPages, totalArticles } = articlesGetByUserReducer;
-	const articleDeleteReducer = useSelector((state) => state.articleDeleteReducer);
-	const { loading: deleteLoading, success: deleteSuccess, error: deleteError } = articleDeleteReducer;
-
+	const { loading: getLoading, error: getError, articles = [], totalPages, totalArticles } = useSelector((state) => state.articlesGetByUserReducer);
+	const { loading: deleteLoading, success: deleteSuccess, error: deleteError } = useSelector((state) => state.articleDeleteReducer);
 	const { userInfo } = useSelector((state) => state.userLoginReducer);
 
-	// delete article
 	const [modalVisible, setModalVisible] = useState(false);
 	const [articleToDelete, setArticleToDelete] = useState(null);
 	const [modalMessage, setModalMessage] = useState("");
 
 
-	// get articles
 	useEffect(() => {
 		if (userInfo) {
 			dispatch({ type: "ARTICLE_GET_BY_USER_RESET" });
@@ -43,55 +36,49 @@ const MyArticles = () => {
 	}, [dispatch, userInfo, currentPage]);
 
 
-	// get params from url
 	useEffect(() => {
 		const pageFromUrl = Number(searchParams.get("page")) || 1;
 		setCurrentPage(pageFromUrl);
 	}, [searchParams]);
 
-	// change url params
 	const isFirstRender = useRef(true);
 	useEffect(() => {
-				if (isFirstRender.current) {
+		if (isFirstRender.current) {
 			isFirstRender.current = false;
 			return;
 		}
-
 		const params = {};
-		if (currentPage > 1) params.page = currentPage;
-
+		if (currentPage > 1) { params.page = currentPage; }
 		const newParams = new URLSearchParams(params).toString();
 		if (searchParams.toString() !== newParams) {
-		setSearchParams(params, { replace: true });
+			setSearchParams(params, { replace: true });
 		}
 	}, [currentPage]);
 
 
-	// switch pages
-	const nextPage = () => {
-		if (currentPage < totalPages) { setCurrentPage((prev) => prev + 1); }
+	const nextPage = () => { 
+		if (currentPage < totalPages) { setCurrentPage((prev) => prev + 1); } 
 	};
-	const prevPage = () => {
-		if (currentPage > 1) { setCurrentPage((prev) => prev - 1); }
+	const prevPage = () => { 
+		if (currentPage > 1) { setCurrentPage((prev) => prev - 1); } 
 	};
 
 
-	// delete article
-		useEffect(() => {
+	useEffect(() => {
 		if (deleteSuccess) {
 			setModalMessage("Article has been successfully deleted!");
 		} else if (deleteError) {
 			setModalMessage(deleteError);
 		}
 	}, [dispatch, deleteSuccess, deleteError]);
-	
+
 	const deleteHandler = () => {
 		setModalMessage("Are you sure you want to delete this article?");
 		setModalVisible(true);
 	};
 
 	const confirmDeleteHandler = () => {
-			dispatch(articleDeleteAction(articleToDelete));
+		dispatch(articleDeleteAction(articleToDelete));
 	};
 
 	const exitAfterDeleteHandler = () => {
@@ -102,18 +89,16 @@ const MyArticles = () => {
 	};
 
 
-	// update article
 	const updateHandler = (articleId) => {
 		dispatch(articleGetAction(articleId));
 		navigate("/dashboard/update-article");
 	};
 
-
 	return (<>
 
 		<section className='container py-8 max-w-4xl'>
 			<h2 className='mb-2 font-medium  text-gray-800 text-base md:text-lg'>Published articles: {totalArticles ? totalArticles : "0"}</h2>
-			{articles.length > 0  && !getLoading && (
+			{articles.length > 0 && !getLoading && (
 				articles.map((article, i) => (
 					<div key={i} className='flex items-center py-4 border-t border-sky-200 first-of-type:border-none'>
 						<div className='w-2/12'>
@@ -169,15 +154,17 @@ const MyArticles = () => {
 					<div className="px-6 py-4 border-b border-gray-200"><h5 className="text-lg font-semibold text-sky-600">Confirmation</h5></div>
 					<div className="px-6 py-4"><p className="text-gray-700">{modalMessage}</p></div>
 					<div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+
 						{!deleteSuccess ? (<>
-						<button onClick={() => { setModalVisible(false); dispatch({ type: "ARTICLE_DELETE_RESET" }); setArticleToDelete(null); }} disabled={deleteLoading}
-							type="button" className="text-sm font-medium px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 transition duration-300 ease-in-out">Cancel</button>
-						<button onClick={confirmDeleteHandler} disabled={deleteLoading}
-							type="button" className="text-white text-sm font-medium px-4 py-2 rounded bg-sky-600 hover:bg-sky-500 transition duration-300 ease-in-out">{!deleteLoading ? "Yes, Delete": "Loading..."}</button>
+							<button onClick={() => { setModalVisible(false); dispatch({ type: "ARTICLE_DELETE_RESET" }); setArticleToDelete(null); }} disabled={deleteLoading}
+								type="button" className="text-sm font-medium px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 transition duration-300 ease-in-out">Cancel</button>
+							<button onClick={confirmDeleteHandler} disabled={deleteLoading}
+								type="button" className="text-white text-sm font-medium px-4 py-2 rounded bg-sky-600 hover:bg-sky-500 transition duration-300 ease-in-out">{!deleteLoading ? "Yes, Delete" : "Loading..."}</button>
 						</>) : (
 							<button onClick={exitAfterDeleteHandler}
 								type="button" className="text-white text-sm font-medium px-4 py-2 rounded bg-sky-600 hover:bg-sky-500 transition duration-300 ease-in-out">OK</button>
 						)}
+
 					</div>
 				</div>
 			</div>

@@ -12,9 +12,7 @@ const EditProfile = () => {
 	const dispatch = useDispatch();
 	const { loading: updateLoading, error: updateError, success: updateSuccess } = useSelector((state) => state.userUpdateReducer);
 	const { error: deleteError, success: deleteSuccess } = useSelector((state) => state.userDeleteReducer);
-
 	const { userInfo } = useSelector((state) => state.userLoginReducer);
-
 
 	const [name, setName] = useState(userInfo.name);
 	const [email, setEmail] = useState(userInfo.email);
@@ -23,10 +21,8 @@ const EditProfile = () => {
 	const [image, setImage] = useState(userInfo.image);
 	const [previewImage, setPreviewImage] = useState(null);
 
-
 	const [errorMessage, setErrorMessage] = useState("");
 	const [successMessage, setSuccessMessage] = useState("");
-
 
 	const [modalVisible, setModalVisible] = useState(false);
 	const [modalMessage, setModalMessage] = useState("");
@@ -57,10 +53,8 @@ const EditProfile = () => {
 		}
 	}, [dispatch, updateError, updateSuccess, deleteError, deleteSuccess, userInfo]);
 
-
 	const updateHandler = (e) => {
 		e.preventDefault();
-
 		const formData = new FormData();
 		formData.append("name", name);
 		formData.append("email", email);
@@ -94,7 +88,6 @@ const EditProfile = () => {
 		setImage(file);
 		setPreviewImage(URL.createObjectURL(file));
 	};
-
 
 	return (<>
 

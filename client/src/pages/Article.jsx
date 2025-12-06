@@ -12,20 +12,15 @@ import Layouts from '../layouts/Layouts'
 
 const Article = () => {
 
-	// url params
 	const { id } = useParams();
 
-	// redux
 	const dispatch = useDispatch();
-	const articleGetReducer = useSelector((state) => state.articleGetReducer);
-	const { loading: articleLoading, error: articleError, article } = articleGetReducer;
+	const { loading: articleLoading, error: articleError, article } = useSelector((state) => state.articleGetReducer);
 
 
-	// get article 
 	useEffect(() => {
 		dispatch(articleGetAction(id))
 	}, [dispatch, id]);
-
 
 	return (<Layouts>
 

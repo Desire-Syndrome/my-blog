@@ -17,7 +17,6 @@ const Dashboard = () => {
 		dispatch(userLogoutAction());
 	}
 
-	
 	return (
 		
 			<div className="min-h-screen">

@@ -14,26 +14,22 @@ const NewArticle = () => {
 
 	const navigate = useNavigate();
 
-	// redux
 	const dispatch = useDispatch();
 	const { loading: articlePostLoading, success: articlePostSuccess, error: articlePostError, article } = useSelector(state => state.articlePostReducer);
 
-	// data
 	const [category, setCategory] = useState(articlesCategories[0]);
 	const [title, setTitle] = useState("");
 	const [image, setImage] = useState(null);
-  const [previewImage, setPreviewImage] = useState(null);
-  const [shortText, setShortText] = useState("");
+	const [previewImage, setPreviewImage] = useState(null);
+	const [shortText, setShortText] = useState("");
 
-	// messages
 	const [errorMessage, setErrorMessage] = useState("");
 	const [successMessage, setSuccessMessage] = useState("");
 
-	// editor
 	const editorRef = useRef(null);
 	const quillRef = useRef(null);
 
-	useEffect(() => { 
+	useEffect(() => {
 		if (!quillRef.current && editorRef.current) {
 			quillRef.current = new Quill(editorRef.current, {
 				theme: 'snow'
@@ -42,7 +38,6 @@ const NewArticle = () => {
 	}, [])
 
 
-	// add article
 	useEffect(() => {
 		if (articlePostSuccess) {
 			setCategory(articlesCategories[0]);
@@ -51,12 +46,11 @@ const NewArticle = () => {
 			setPreviewImage(null);
 			setShortText("");
 			quillRef.current.setContents([]);
-
 			setSuccessMessage("Article created successfully.");
 			setTimeout(() => {
 				setSuccessMessage("");
 				dispatch({ type: "ARTICLE_POST_RESET" });
- 				navigate(`/article/${article._id}`);
+				navigate(`/article/${article._id}`);
 			}, 3000);
 		} else if (articlePostError) {
 			setErrorMessage(articlePostError);
@@ -67,62 +61,58 @@ const NewArticle = () => {
 		}
 	}, [dispatch, articlePostSuccess, articlePostError, navigate, article]);
 
-
-	// Handle image file before post
-  const imageChange = (e) => {
-    const file = e.target.files[0];
-    setImage(file);
-    setPreviewImage(URL.createObjectURL(file));
-  };
-
-  // post article (onSubmit)
-  const submitArticleHandler = (event) => {
-    event.preventDefault();
-    // create FormData to handle both text and file data (image)
-    const updatedData = new FormData();
+	const submitArticleHandler = (event) => {
+		event.preventDefault();
+		const updatedData = new FormData();
 		updatedData.append("category", category);
-    updatedData.append("title", title);
-    updatedData.append("shortText", shortText);
-    updatedData.append("fullText", quillRef.current.root.innerHTML); 
-    if (image) {
-      updatedData.append("articleImage", image);
-    }
-    dispatch(articlePostAction(updatedData)); 
-  }
+		updatedData.append("title", title);
+		updatedData.append("shortText", shortText);
+		updatedData.append("fullText", quillRef.current.root.innerHTML);
+		if (image) {
+			updatedData.append("articleImage", image);
+		}
+		dispatch(articlePostAction(updatedData));
+	}
 
 
-	return ( 
+	const imageChange = (e) => {
+		const file = e.target.files[0];
+		setImage(file);
+		setPreviewImage(URL.createObjectURL(file));
+	};
+
+	return (
 
 		<form onSubmit={submitArticleHandler} className='container py-8 flex flex-col w-full items-start gap-3'>
 			<div className='w-full'>
 				<p className='mb-2'>Title</p>
 				<input onChange={e => setTitle(e.target.value)} value={title} type="text" placeholder="" className='w-full max-w-3xl py-2 border-2 border-gray-300' required />
 			</div>
-		<div className='max-w-3xl mt-6 w-full flex flex-col md:flex-row justify-between'>
- 			<div className='w-full md:w-5/12 bg-sky-100 py-4 rounded-lg'>
-				<label htmlFor="image">
-					<img src={previewImage ? previewImage : assetsImages.upload_area2}
-						alt="Upload image" className='w-30 h-20 md:w-36 md:h-24 ms-5 object-cover inline-block cursor-pointer border border-sky-300' />
-					<input onChange={(e) => { imageChange(e) }} type="file" id='image' hidden />
-					<p className='text-sm  md:text-base ms-3 px-2 py-2 cursor-pointer inline-block'>Change image</p>
-				</label>
+			<div className='max-w-3xl mt-6 w-full flex flex-col md:flex-row justify-between'>
+				<div className='w-full md:w-5/12 bg-sky-100 py-4 rounded-lg'>
+					<label htmlFor="image">
+						<img src={previewImage ? previewImage : assetsImages.upload_area2}
+							alt="Upload image" className='w-30 h-20 md:w-36 md:h-24 ms-5 object-cover inline-block cursor-pointer border border-sky-300' />
+						<input onChange={(e) => { imageChange(e) }} type="file" id='image' hidden />
+						<p className='text-sm  md:text-base ms-3 px-2 py-2 cursor-pointer inline-block'>Change image</p>
+					</label>
+				</div>
+				<div className='w-full md:w-6/12 mt-8 md:mt-0'>
+					<p className='mb-2'>Description</p>
+					<textarea onChange={e => setShortText(e.target.value)} value={shortText} rows="3" type="text" placeholder="" className='w-full max-w-3xl py-2 border-2 border-gray-300' />
+				</div>
 			</div>
-			<div className='w-full md:w-6/12 mt-8 md:mt-0'>
-				<p className='mb-2'>Description</p>
-				<textarea onChange={e => setShortText(e.target.value)} value={shortText} rows="3" type="text" placeholder="" className='w-full max-w-3xl py-2 border-2 border-gray-300' />
-			</div>
-		</div>
 			<div className='max-w-3xl w-full'>
 				<p className='my-2'>Content</p>
 				<div className='my-quil' ref={editorRef}></div>
 			</div>
 			<div className='flex gap-2 w-full max-w-3xl mt-4 items-center'>
-					<p className='w-20'>Category</p>
-					<select onChange={e => setCategory(e.target.value)} className='x-3 py-2 border-2 border-gray-300'>
-						{articlesCategories.map((category, i) => (
-							<option value={category} key={i}>{category}</option>
-						))}
-					</select>
+				<p className='w-20'>Category</p>
+				<select onChange={e => setCategory(e.target.value)} className='x-3 py-2 border-2 border-gray-300'>
+					{articlesCategories.map((category, i) => (
+						<option value={category} key={i}>{category}</option>
+					))}
+				</select>
 			</div>
 			<div className='max-w-3xl w-full'>
 

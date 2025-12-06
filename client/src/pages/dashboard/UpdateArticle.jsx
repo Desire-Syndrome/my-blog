@@ -15,29 +15,23 @@ const UpdateArticle = () => {
 
 	const navigate = useNavigate();
 
-	// redux
 	const dispatch = useDispatch();
 	const { loading: articleLoading, article } = useSelector((state) => state.articleGetReducer);
 	const { loading: updateLoading, success: updateSuccess, error: updateError } = useSelector(state => state.articleUpdateReducer);
-
 	const { userInfo } = useSelector((state) => state.userLoginReducer);
 
-	// data
 	const [category, setCategory] = useState(articlesCategories[0]);
 	const [title, setTitle] = useState("");
 	const [image, setImage] = useState(null);
 	const [previewImage, setPreviewImage] = useState(null);
 	const [shortText, setShortText] = useState("");
 
-	// check fields when render
 	const [hadShortText, setHadShortText] = useState(false);
 	const [hadImage, setHadImage] = useState(false);
 
-	// messages
 	const [errorMessage, setErrorMessage] = useState("");
 	const [successMessage, setSuccessMessage] = useState("");
 
-	// editor
 	const editorRef = useRef(null);
 	const quillRef = useRef(null);
 
@@ -53,7 +47,6 @@ const UpdateArticle = () => {
 	}, [articleLoading, article]);
 
 
-	// get article
 	useEffect(() => {
 		if (article) {
 			setHadShortText(!!article.shortText);
@@ -70,15 +63,6 @@ const UpdateArticle = () => {
 	}, [article]);
 
 
-	// Handle image file before post
-	const imageChange = (e) => {
-		const file = e.target.files[0];
-		setImage(file);
-		setPreviewImage(URL.createObjectURL(file));
-	};
-
-
-	// update article (onSubmit)
 	useEffect(() => {
 		if (updateSuccess) {
 			setSuccessMessage("Article successfully updated!");
@@ -99,7 +83,6 @@ const UpdateArticle = () => {
 
 	const updateArticleHandler = (event) => {
 		event.preventDefault();
-		// create FormData to handle both text and file data (image)
 		const updatedData = new FormData();
 		updatedData.append("category", category);
 		updatedData.append("title", title);
@@ -111,6 +94,12 @@ const UpdateArticle = () => {
 		dispatch(articleUpdateAction(article._id, updatedData));
 	}
 
+
+	const imageChange = (e) => {
+		const file = e.target.files[0];
+		setImage(file);
+		setPreviewImage(URL.createObjectURL(file));
+	};
 
 	return (
 
