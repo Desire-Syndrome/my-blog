@@ -20,6 +20,8 @@ const UpdateArticle = () => {
 	const { loading: articleLoading, article } = useSelector((state) => state.articleGetReducer);
 	const { loading: updateLoading, success: updateSuccess, error: updateError } = useSelector(state => state.articleUpdateReducer);
 
+	const { userInfo } = useSelector((state) => state.userLoginReducer);
+
 	// data
 	const [category, setCategory] = useState(articlesCategories[0]);
 	const [title, setTitle] = useState("");
@@ -115,10 +117,24 @@ const UpdateArticle = () => {
 		!articleLoading && (
 			<form onSubmit={updateArticleHandler} className='container py-8 flex flex-col w-full items-start gap-3'>
 				<div className='w-full max-w-3xl'>
-					<p className='text-lg font-medium text-gray-800'>{title}</p>
+					{userInfo.isAdmin ? (<>
+						<p className='mb-2'>Title</p>
+						<input onChange={e => setTitle(e.target.value)} value={title} type="text" placeholder="" className='w-full max-w-3xl py-2 border-2 border-gray-300' required />
+					</>) : (
+						<p className='text-lg font-medium text-gray-800'>{title}</p>
+					)}
 				</div>
 				<div className='max-w-3xl mt-3 w-full flex flex-col md:flex-row justify-between items-center'>
-					{!hadImage ? (
+					{userInfo.isAdmin ? (
+						<div className='w-full md:w-5/12 bg-sky-100 py-4 rounded-lg'>
+							<label htmlFor="image">
+								<img src={previewImage ? previewImage : assetsImages.upload_area2}
+									alt="Upload image" className='w-30 h-20 md:w-36 md:h-24 ms-5 object-cover inline-block cursor-pointer border border-sky-300' />
+								<input onChange={(e) => { imageChange(e) }} type="file" id='image' hidden />
+								<p className='text-sm  md:text-base ms-3 px-2 py-2 cursor-pointer inline-block'>Change image</p>
+							</label>
+						</div>
+					) : !hadImage ? (
 						<div className='w-full md:w-5/12 bg-sky-100 py-4 rounded-lg'>
 							<label htmlFor="image">
 								<img src={previewImage ? previewImage : assetsImages.upload_area2}
@@ -133,7 +149,10 @@ const UpdateArticle = () => {
 						</div>
 					)}
 					<div className='w-full md:w-6/12 mt-8 md:mt-0'>
-						{!hadShortText ? (<>
+						{userInfo.isAdmin ? (<>
+							<p className='mb-2'>Description</p>
+							<textarea onChange={e => setShortText(e.target.value)} value={shortText} rows="3" type="text" placeholder="" className='w-full max-w-3xl py-2 border-2 border-gray-300' />
+						</>) : !hadShortText ? (<>
 							<p className='mb-2'>Description</p>
 							<textarea onChange={e => setShortText(e.target.value)} value={shortText} rows="3" type="text" placeholder="" className='w-full max-w-3xl py-2 border-2 border-gray-300' />
 						</>) : (
