@@ -16,8 +16,8 @@ const UpdateArticle = () => {
 	const navigate = useNavigate();
 
 	const dispatch = useDispatch();
-	const { loading: articleLoading, article } = useSelector((state) => state.articleGetReducer);
-	const { loading: updateLoading, success: updateSuccess, error: updateError } = useSelector(state => state.articleUpdateReducer);
+	const { loading: articleGetLoading, article } = useSelector((state) => state.articleGetReducer);
+	const { loading: articleUpdateLoading, success: articleUpdateSuccess, error: articleUpdateError } = useSelector(state => state.articleUpdateReducer);
 	const { userInfo } = useSelector((state) => state.userLoginReducer);
 
 	const [category, setCategory] = useState(articlesCategories[0]);
@@ -36,7 +36,7 @@ const UpdateArticle = () => {
 	const quillRef = useRef(null);
 
 	useEffect(() => {
-		if (!articleLoading && editorRef.current && !quillRef.current) {
+		if (!articleGetLoading && editorRef.current && !quillRef.current) {
 			quillRef.current = new Quill(editorRef.current, {
 				theme: 'snow'
 			});
@@ -44,7 +44,7 @@ const UpdateArticle = () => {
 				quillRef.current.root.innerHTML = article.fullText;
 			}
 		}
-	}, [articleLoading, article]);
+	}, [articleGetLoading, article]);
 
 
 	useEffect(() => {
@@ -64,7 +64,7 @@ const UpdateArticle = () => {
 
 
 	useEffect(() => {
-		if (updateSuccess) {
+		if (articleUpdateSuccess) {
 			setSuccessMessage("Article successfully updated!");
 			setTimeout(() => {
 				if (article._id) {
@@ -72,16 +72,16 @@ const UpdateArticle = () => {
 					dispatch({ type: "ARTICLE_UPDATE_RESET" });
 				}
 			}, 2000);
-		} else if (updateError) {
-			setErrorMessage(updateError);
+		} else if (articleUpdateError) {
+			setErrorMessage(articleUpdateError);
 			setTimeout(() => {
 				setErrorMessage("")
 				dispatch({ type: "ARTICLE_UPDATE_RESET" });
 			}, 3000);
 		}
-	}, [updateSuccess, updateError, navigate, dispatch, article]);
+	}, [articleUpdateSuccess, articleUpdateError, navigate, dispatch, article]);
 
-	const updateArticleHandler = (event) => {
+	const articleUpdateHandler = (event) => {
 		event.preventDefault();
 		const updatedData = new FormData();
 		updatedData.append("category", category);
@@ -103,8 +103,8 @@ const UpdateArticle = () => {
 
 	return (
 
-		!articleLoading && (
-			<form onSubmit={updateArticleHandler} className='container py-8 flex flex-col w-full items-start gap-3'>
+		!articleGetLoading && (
+			<form onSubmit={articleUpdateHandler} className='container py-8 flex flex-col w-full items-start gap-3'>
 				<div className='w-full max-w-3xl'>
 					{userInfo.isAdmin ? (<>
 						<p className='mb-2'>Title</p>
@@ -175,8 +175,8 @@ const UpdateArticle = () => {
 					)}
 
 				</div>
-				<button disabled={updateLoading} type="submit" className="mt-4 bg-blue-600 rounded px-12 py-3 text-white hover:bg-blue-500 transition duration-300 ease-in-out">
-					{updateLoading ? "Loading..." : "Update Article"}
+				<button disabled={articleUpdateLoading} type="submit" className="mt-4 bg-blue-600 rounded px-12 py-3 text-white hover:bg-blue-500 transition duration-300 ease-in-out">
+					{articleUpdateLoading ? "Loading..." : "Update Article"}
 				</button>
 			</form>
 		)

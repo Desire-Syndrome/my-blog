@@ -10,8 +10,8 @@ import { userUpdateAction, userDeleteAction, userLogoutAction } from "../../redu
 const EditProfile = () => {
 
 	const dispatch = useDispatch();
-	const { loading: updateLoading, error: updateError, success: updateSuccess } = useSelector((state) => state.userUpdateReducer);
-	const { error: deleteError, success: deleteSuccess } = useSelector((state) => state.userDeleteReducer);
+	const { loading: userUpdateLoading, error: userUpdateError, success: userUpdateSuccess } = useSelector((state) => state.userUpdateReducer);
+	const { error: userDeleteError, success: userDeleteSuccess } = useSelector((state) => state.userDeleteReducer);
 	const { userInfo } = useSelector((state) => state.userLoginReducer);
 
 	const [name, setName] = useState(userInfo.name);
@@ -29,7 +29,7 @@ const EditProfile = () => {
 
 
 	useEffect(() => {
-		if (updateSuccess) {
+		if (userUpdateSuccess) {
 			setSuccessMessage("Your profile updated.");
 			setName(userInfo.name);
 			setEmail(userInfo.email);
@@ -38,22 +38,22 @@ const EditProfile = () => {
 				setOldPassword(""); setNewPassword("");
 				dispatch({ type: "USER_UPDATE_RESET" });
 			}, 3000);
-		} else if (updateError) {
-			setErrorMessage(updateError);
+		} else if (userUpdateError) {
+			setErrorMessage(userUpdateError);
 			setTimeout(() => {
 				setErrorMessage("");
 				setOldPassword(""); setNewPassword("");
 				dispatch({ type: "USER_UPDATE_RESET" });
 			}, 3000);
 		}
-		if (deleteSuccess) {
+		if (userDeleteSuccess) {
 			setModalMessage("Your account has been successfully deleted!");
-		} else if (deleteError) {
-			setModalMessage(deleteError);
+		} else if (userDeleteError) {
+			setModalMessage(userDeleteError);
 		}
-	}, [dispatch, updateError, updateSuccess, deleteError, deleteSuccess, userInfo]);
+	}, [dispatch, userUpdateError, userUpdateSuccess, userDeleteError, userDeleteSuccess, userInfo]);
 
-	const updateHandler = (e) => {
+	const userUpdateHandler = (e) => {
 		e.preventDefault();
 		const formData = new FormData();
 		formData.append("name", name);
@@ -67,16 +67,16 @@ const EditProfile = () => {
 	};
 
 
-	const deleteHandler = () => {
+	const userDeleteHandler = () => {
 		setModalMessage("Are you sure you want to delete your profile?");
 		setModalVisible(true);
 	};
 
-	const confirmDeleteHandler = () => {
+	const userConfirmDeleteHandler = () => {
 		dispatch(userDeleteAction());
 	};
 
-	const exitAfterDeleteHandler = () => {
+	const userAfterDeleteHandler = () => {
 		dispatch(userLogoutAction());
 		dispatch({ type: "USER_DELETE_RESET" });
 		setModalVisible(false);
@@ -91,7 +91,7 @@ const EditProfile = () => {
 
 	return (<>
 
-		<form onSubmit={updateHandler} className='container max-w-2xl py-8 flex flex-col w-full items-start gap-3'>
+		<form onSubmit={userUpdateHandler} className='container max-w-2xl py-8 flex flex-col w-full items-start gap-3'>
 			<div className='w-full py-4 bg-sky-100 rounded-lg'>
 				<label htmlFor="image">
 					<img src={previewImage ? previewImage : userInfo.image ? `${BASE_URL}${userInfo.image}` : assetsImages.upload_area}
@@ -136,9 +136,9 @@ const EditProfile = () => {
 			)}
 
 			<div className='mt-5 flex items-center'>
-				<button disabled={updateLoading}
+				<button disabled={userUpdateLoading}
 					className="font-medium text-center bg-sky-600 rounded px-5 md:px-8 py-3 text-white text-sm md:text-base hover:bg-sky-500 transition duration-300 ease-in-out">Update Profile</button>
-				<button onClick={deleteHandler}
+				<button onClick={userDeleteHandler}
 					type="button" className="ms-5 font-medium text-center rounded px-5 md:px-8 py-3 text-gray-800 text-sm md:text-base bg-slate-200 hover:bg-gray-300 transition duration-300 ease-in-out">Delete Profile</button>
 			</div>
 		</form >
@@ -151,13 +151,13 @@ const EditProfile = () => {
 					<div className="px-6 py-4"><p className="text-gray-700">{modalMessage}</p></div>
 					<div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
 
-						{!deleteSuccess ? (<>
+						{!userDeleteSuccess ? (<>
 							<button onClick={() => { dispatch({ type: "USER_DELETE_RESET" }); setModalVisible(false); }}
 								type="button" className="text-sm font-medium px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 transition duration-300 ease-in-out">Cancel</button>
-							<button onClick={confirmDeleteHandler}
+							<button onClick={userConfirmDeleteHandler}
 								type="button" className="text-white text-sm font-medium px-4 py-2 rounded bg-sky-600 hover:bg-sky-500 transition duration-300 ease-in-out">Yes, Delete</button>
 						</>) : (
-							<button onClick={exitAfterDeleteHandler}
+							<button onClick={userAfterDeleteHandler}
 								type="button" className="text-white text-sm font-medium px-4 py-2 rounded bg-sky-600 hover:bg-sky-500 transition duration-300 ease-in-out">OK</button>
 						)}
 

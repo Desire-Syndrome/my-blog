@@ -28,7 +28,7 @@ const Blog = () => {
 	const articlesPerPage = 24;
 
 	const dispatch = useDispatch();
-	const { loading: articlesLoading, articles = [], totalPages, totalArticles } = useSelector((state) => state.articlesGetAllReducer);
+	const { loading: articlesGetAllLoading, articles = [], totalPages, totalArticles } = useSelector((state) => state.articlesGetAllReducer);
 
 
 	useEffect(() => {
@@ -131,7 +131,7 @@ const Blog = () => {
 			<section className='w-full lg:w-4/5 text-gray-800 max-lg:px-4'>
 				<h3 id='job-list' className='font-medium text-3xl py-2'>Latest articles</h3>
 				<p className='mb-8'>Explore articles to suit every taste</p>
-				{!articlesLoading && (
+				{!articlesGetAllLoading && (
 					articles.length > 0 ? (
 						<div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4'>
 							{articles.map((article, i) => (

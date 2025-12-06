@@ -61,7 +61,7 @@ const NewArticle = () => {
 		}
 	}, [dispatch, articlePostSuccess, articlePostError, navigate, article]);
 
-	const submitArticleHandler = (event) => {
+	const articlePostHandler = (event) => {
 		event.preventDefault();
 		const updatedData = new FormData();
 		updatedData.append("category", category);
@@ -83,7 +83,7 @@ const NewArticle = () => {
 
 	return (
 
-		<form onSubmit={submitArticleHandler} className='container py-8 flex flex-col w-full items-start gap-3'>
+		<form onSubmit={articlePostHandler} className='container py-8 flex flex-col w-full items-start gap-3'>
 			<div className='w-full'>
 				<p className='mb-2'>Title</p>
 				<input onChange={e => setTitle(e.target.value)} value={title} type="text" placeholder="" className='w-full max-w-3xl py-2 border-2 border-gray-300' required />
