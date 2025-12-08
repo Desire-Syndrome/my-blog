@@ -19,7 +19,7 @@ const MyArticles = () => {
 	const articlesPerPage = 20;
 
 	const dispatch = useDispatch();
-	const { loading: articlesGetLoading, error: articlesGetError, articles = [], totalPages, totalArticles } = useSelector((state) => state.articlesGetByUserReducer);
+	const { loading: articlesGetByUserLoading, error: articlesGetByUserError, articles = [], totalPages, totalArticles } = useSelector((state) => state.articlesGetByUserReducer);
 	const { loading: articleDeleteLoading, success: articleDeleteSuccess, error: articleDeleteError } = useSelector((state) => state.articleDeleteReducer);
 	const { userInfo } = useSelector((state) => state.userLoginReducer);
 
@@ -98,7 +98,7 @@ const MyArticles = () => {
 
 		<section className='container py-8 max-w-4xl'>
 			<h2 className='mb-2 font-medium  text-gray-800 text-base md:text-lg'>Published articles: {totalArticles ? totalArticles : "0"}</h2>
-			{articles.length > 0 && !articlesGetLoading && (
+			{articles.length > 0 && !articlesGetByUserLoading && (
 				articles.map((article, i) => (
 					<div key={i} className='flex items-center py-4 border-t border-sky-200 first-of-type:border-none'>
 						<div className='w-2/12'>
@@ -129,8 +129,8 @@ const MyArticles = () => {
 				))
 			)}
 
-			{articlesGetError && (
-				<p className="w-full mt-3 py-3 max-[500px]:text-xs text-sm lg:text-base text-center rounded-md bg-rose-100 border border-rose-300">{articlesGetError}</p>
+			{articlesGetByUserError && (
+				<p className="w-full mt-3 py-3 max-[500px]:text-xs text-sm lg:text-base text-center rounded-md bg-rose-100 border border-rose-300">{articlesGetByUserError}</p>
 			)}
 
 			{totalPages > 1 &&
