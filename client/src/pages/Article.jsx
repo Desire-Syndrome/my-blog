@@ -17,14 +17,22 @@ const Article = () => {
 
 	const dispatch = useDispatch();
 	const { loading: articleGetLoading, error: articleGetError, article } = useSelector((state) => state.articleGetReducer);
-	const { loading: userGetByIdLoading, success: userGetByIdSuccess, error: userGetByIdError, userById } = useSelector((state) => state.userGetByIdReducer);
+	const { loading: userGetByIdLoading, success: userGetByIdSuccess, error: userGetByIdError, user: userById } = useSelector((state) => state.userGetByIdReducer);
 
 	const [modalVisible, setModalVisible] = useState(false);
+
+	const [errorMessage, setErrorMessage] = useState("");
 
 
 	useEffect(() => {
 		dispatch(articleGetAction(id))
 	}, [dispatch, id]);
+
+
+	const userGetByIdHandler = (userId) => {
+		dispatch(userGetByIdAction(userId));
+		setModalVisible(true);
+	};
 
 	return (<Layouts>
 
@@ -48,12 +56,12 @@ const Article = () => {
 							<div className='inline-flex items-center gap-1 mt-3 md:mt-4'>
 								<p className='text-lg text-gray-500 me-2'>Author:</p>
 								{article.author ? (
-									<div onClick={() => setModalVisible(true)} className="inline-flex items-center gap-2 rounded cursor-pointer hover:opacity-90 transition duration-300 ease-in-out">
+									<div onClick={() => userGetByIdHandler(article.author._id)} className="inline-flex items-center gap-2 cursor-pointer hover:opacity-90 transition duration-300 ease-in-out">
 										<img src={article.author.image ? `${BASE_URL}${article.author.image}` : assetsImages.upload_area} className="w-8 h-8 object-cover rounded-full border border-sky-300" alt="User Avatar" />
 										<span className="text-black text-lg font-medium">{article.author.name.length > 10 ? `${article.author.name.slice(0, 10)}...` : article.author.name}</span>
 									</div>
 								) : (
-									<div className="inline-flex items-center gap-2 rounded">
+									<div className="inline-flex items-center gap-2">
 										<img src={assetsImages.upload_area} className="w-8 h-8 object-cover rounded-full border border-sky-300" alt="User Avatar" />
 										<span className="text-black text-lg font-medium">Author unknown</span>
 									</div>
@@ -71,16 +79,25 @@ const Article = () => {
 			</div>
 
 			{modalVisible && (<>
-				<div onClick={() => setModalVisible(false)} className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-					<div onClick={(e) => e.stopPropagation()} className="bg-white rounded-lg shadow-lg w-full max-w-md">
+				<div onClick={() => { setModalVisible(false); dispatch({ type: "USER_GET_BY_ID_RESET" }); }} className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+					<div onClick={(e) => e.stopPropagation()} className="bg-white rounded-lg shadow-lg px-4 py-2 w-full max-w-md">
+
+						{!userGetByIdLoading && userGetByIdSuccess ? (<>
+							<div className="mt-4 md:mt-6 flex flex-col items-center text-center">
+								<img src={article.author.image ? `${BASE_URL}${article.author.image}` : assetsImages.upload_area} className="w-24 h-24 object-cover rounded-full border border-sky-300" alt="User Avatar" />
+								<span className="mt-2 text-black text-xl md:text-2xl font-medium">{article.author.name.length > 30 ? `${article.author.name.slice(0, 10)}...` : article.author.name}</span>
+							</div>
+
+
+
+
+
+						</>) : (
+							<div className="my-3 rounded-md bg-rose-100 border border-rose-300 px-4 py-3 text-sm text-center">
+								{userGetByIdError}
+							</div>
+						)}
 						
-						
-
-
-
-
-
-
 					</div>
 				</div>
 			</>)}
@@ -89,9 +106,10 @@ const Article = () => {
 			<div className='mt-12 py-10 container px-4 2xl:px-20 mx-auto'>
 				<p className='text-lg sm:text-xl font-medium  text-center text-neutral-700'>{articleGetError}</p>
 			</div>
-		)}
+		)
+		}
 
-	</Layouts>)
+	</Layouts >)
 }
 
 export default Article
