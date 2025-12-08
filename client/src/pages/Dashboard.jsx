@@ -5,7 +5,7 @@ import { Link, NavLink, Outlet } from "react-router-dom"
 import UserMenu from '../components/UserMenu'
 
 import { useDispatch } from "react-redux";
-import { userLogoutAction } from "../redux/actions/UserActions"
+import { userLogoutAction } from "../redux/actions/userActions"
 
 
 const Dashboard = () => {
