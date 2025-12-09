@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { useParams, Link } from 'react-router-dom'
 
 import { useDispatch, useSelector } from "react-redux";
-import { articleGetAction } from "../redux/actions/articleActions"
+import { articleGetAction, articlesGetByUserAction } from "../redux/actions/articleActions"
 import { userGetByIdAction } from "../redux/actions/userActions"
 
 import Layouts from '../layouts/Layouts'
@@ -17,11 +17,15 @@ const Article = () => {
 
 	const dispatch = useDispatch();
 	const { loading: articleGetLoading, error: articleGetError, article } = useSelector((state) => state.articleGetReducer);
-	const { loading: userGetByIdLoading, success: userGetByIdSuccess, error: userGetByIdError, user: userById } = useSelector((state) => state.userGetByIdReducer);
+	const { success: userGetByIdSuccess, error: userGetByIdError, user: userById } = useSelector((state) => state.userGetByIdReducer);
+	const { error: articlesGetByUserError, articles = [], totalPages } = useSelector((state) => state.articlesGetByUserReducer);
+
+	const [selectedUserId, setSelectedUserId] = useState(null);
 
 	const [modalVisible, setModalVisible] = useState(false);
 
-	const [errorMessage, setErrorMessage] = useState("");
+	const [currentPage, setCurrentPage] = useState(1);
+	const articlesPerPage = 5;
 
 
 	useEffect(() => {
@@ -29,9 +33,31 @@ const Article = () => {
 	}, [dispatch, id]);
 
 
+	useEffect(() => {
+		if (modalVisible && selectedUserId) {
+			dispatch(articlesGetByUserAction(selectedUserId, currentPage, articlesPerPage));
+		}
+	}, [modalVisible, selectedUserId, currentPage, dispatch]);
+
 	const userGetByIdHandler = (userId) => {
+		setCurrentPage(1);
+		setSelectedUserId(userId);
 		dispatch(userGetByIdAction(userId));
 		setModalVisible(true);
+	};
+
+	const closeModal = () => {
+		setModalVisible(false);
+		dispatch({ type: "USER_GET_BY_ID_RESET" });
+		dispatch({ type: "ARTICLE_GET_BY_USER_RESET" });
+	}
+
+
+	const nextPage = () => {
+		if (currentPage < totalPages) { setCurrentPage((prev) => prev + 1); }
+	};
+	const prevPage = () => {
+		if (currentPage > 1) { setCurrentPage((prev) => prev - 1); }
 	};
 
 	return (<Layouts>
@@ -78,29 +104,56 @@ const Article = () => {
 				</div>
 			</div>
 
-			{modalVisible && (<>
-				<div onClick={() => { setModalVisible(false); dispatch({ type: "USER_GET_BY_ID_RESET" }); }} className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+
+			{modalVisible && (
+				<div onClick={closeModal} className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
 					<div onClick={(e) => e.stopPropagation()} className="bg-white rounded-lg shadow-lg px-4 py-2 w-full max-w-md">
 
-						{!userGetByIdLoading && userGetByIdSuccess ? (<>
+						{userGetByIdSuccess && (<>
 							<div className="mt-4 md:mt-6 flex flex-col items-center text-center">
-								<img src={article.author.image ? `${BASE_URL}${article.author.image}` : assetsImages.upload_area} className="w-24 h-24 object-cover rounded-full border border-sky-300" alt="User Avatar" />
-								<span className="mt-2 text-black text-xl md:text-2xl font-medium">{article.author.name.length > 30 ? `${article.author.name.slice(0, 10)}...` : article.author.name}</span>
+								<img src={userById.image ? `${BASE_URL}${userById.image}` : assetsImages.upload_area} className="w-24 h-24 object-cover rounded-full border-2 border-sky-300" alt="User Avatar" />
+								<span className="mt-2 text-black text-xl md:text-2xl font-medium">{userById.name.length > 30 ? `${article.author.name.slice(0, 10)}...` : article.author.name}</span>
 							</div>
+							<h4 className='border-t border-b border-sky-300 py-2 mt-4 text-center font-medium text-lg text-gray-800'>User Articles</h4>
+							{articles.length > 0 ? (<>
+								<ul className='mt-2'>
+									{articles.map((article, i) => (
+										<li index={i} className='pt-1'>
+											<Link onClick={() => { setModalVisible(false); dispatch({ type: "USER_GET_BY_ID_RESET" }); }} to={`/article/${article._id}`} className='block text-sky-900 hover:text-sky-500 transition duration-300 ease-in-out' >
+												- {article.title.slice(0, 35)}
+											</Link>
+										</li>
+									))}
+								</ul>
 
+								{totalPages > 1 &&
+									<div className="flex flex-col items-center mt-4 mb-2">
+										<span className="mb-2">Page {currentPage} / {totalPages}</span>
+										<div className="flex gap-2 text-md">
+											<button onClick={prevPage} disabled={currentPage === 1}
+												className="bg-sky-600 rounded-full px-4 py-1 text-white hover:bg-sky-500 transition duration-300 ease-in-out disabled:bg-gray-400 disabled:hover:bg-gray-400">Prev</button>
+											<button onClick={nextPage} disabled={currentPage === totalPages}
+												className="bg-sky-600 rounded-full px-4 py-1 text-white hover:bg-sky-500 transition duration-300 ease-in-out disabled:bg-gray-400 disabled:hover:bg-gray-400">Next</button>
+										</div>
+									</div>
+								}
+							</>) : (
+								<p className='w-full mt-6 mb-3 text-base text-center'>User has no articles...</p>
+							)}
 
+							{articlesGetByUserError && (
+								<p className="w-full mt-3 py-3 text-sm lg:text-base text-center rounded-md bg-rose-100 border border-rose-300">{articlesGetByUserError}</p>
+							)}
+						</>)}
 
-
-
-						</>) : (
+						{userGetByIdError && (
 							<div className="my-3 rounded-md bg-rose-100 border border-rose-300 px-4 py-3 text-sm text-center">
 								{userGetByIdError}
 							</div>
 						)}
-						
 					</div>
 				</div>
-			</>)}
+			)}
 
 		</>) : (
 			<div className='mt-12 py-10 container px-4 2xl:px-20 mx-auto'>
