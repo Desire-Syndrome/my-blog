@@ -26,7 +26,7 @@ const Article = () => {
 	const [modalVisible, setModalVisible] = useState(false);
 
 	const [currentPage, setCurrentPage] = useState(1);
-	const articlesPerPage = 2;
+	const articlesPerPage = 5;
 
 
 	useEffect(() => {
