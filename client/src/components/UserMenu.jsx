@@ -4,7 +4,7 @@ import { assetsImages } from '../assets/images-data'
 import { Link } from "react-router-dom"
 
 import { useDispatch, useSelector } from "react-redux";
-import { userLogoutAction } from "../redux/actions/UserActions"
+import { userLogoutAction } from "../redux/actions/userActions"
 
 
 function UserMenu() {
