@@ -10,6 +10,7 @@ import { articlesGetAllAction } from "../redux/actions/articleActions"
 
 import Layouts from '../layouts/Layouts'
 import ArticleCard from '../components/ArticleCard'
+import Pagination from "../components/Pagination"
 
 
 const Blog = () => {
@@ -131,29 +132,21 @@ const Blog = () => {
 			<section className='w-full lg:w-4/5 text-gray-800 max-lg:px-4'>
 				<h3 id='job-list' className='font-medium text-3xl py-2'>Latest articles</h3>
 				<p className='mb-8'>Explore articles to suit every taste</p>
+				
 				{!articlesGetAllLoading && (
-					articles.length > 0 ? (
+					articles.length > 0 ? (<>
 						<div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4'>
 							{articles.map((article, i) => (
 								<ArticleCard key={i} article={article} />
 							))}
 						</div>
-					) : (
+						<Pagination currentPage={currentPage} totalPages={totalPages}
+					nextPage={nextPage} prevPage={prevPage} />
+					</>) : (
 						<p>Nothing found, please change your search criteria...</p>
 					)
 				)}
 
-				{totalPages > 1 &&
-					<div className="flex flex-col items-center mt-6">
-						<span className="mb-2">Page {currentPage} / {totalPages}</span>
-						<div className="flex gap-2 text-md">
-							<button onClick={prevPage} disabled={currentPage === 1}
-								className="bg-sky-600 rounded-full px-4 py-1 text-white hover:bg-sky-500 transition duration-300 ease-in-out disabled:bg-gray-400 disabled:hover:bg-gray-400">Prev</button>
-							<button onClick={nextPage} disabled={currentPage === totalPages}
-								className="bg-sky-600 rounded-full px-4 py-1 text-white hover:bg-sky-500 transition duration-300 ease-in-out disabled:bg-gray-400 disabled:hover:bg-gray-400">Next</button>
-						</div>
-					</div>
-				}
 			</section>
 		</div>
 

@@ -9,6 +9,7 @@ import { articleGetAction, articlesGetByUserAction } from "../redux/actions/arti
 import { userGetByIdAction } from "../redux/actions/userActions"
 
 import Layouts from '../layouts/Layouts'
+import Pagination from "../components/Pagination"
 
 
 const Article = () => {
@@ -25,7 +26,7 @@ const Article = () => {
 	const [modalVisible, setModalVisible] = useState(false);
 
 	const [currentPage, setCurrentPage] = useState(1);
-	const articlesPerPage = 5;
+	const articlesPerPage = 2;
 
 
 	useEffect(() => {
@@ -107,7 +108,7 @@ const Article = () => {
 
 			{modalVisible && (
 				<div onClick={closeModal} className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-					<div onClick={(e) => e.stopPropagation()} className="bg-white rounded-lg shadow-lg px-4 py-2 w-full max-w-md">
+					<div onClick={(e) => e.stopPropagation()} className="bg-white rounded-lg shadow-lg px-4 pt-2 pb-4 w-full max-w-md">
 
 						{userGetByIdSuccess && (<>
 							<div className="mt-4 md:mt-6 flex flex-col items-center text-center">
@@ -126,17 +127,8 @@ const Article = () => {
 									))}
 								</ul>
 
-								{totalPages > 1 &&
-									<div className="flex flex-col items-center mt-4 mb-2">
-										<span className="mb-2">Page {currentPage} / {totalPages}</span>
-										<div className="flex gap-2 text-md">
-											<button onClick={prevPage} disabled={currentPage === 1}
-												className="bg-sky-600 rounded-full px-4 py-1 text-white hover:bg-sky-500 transition duration-300 ease-in-out disabled:bg-gray-400 disabled:hover:bg-gray-400">Prev</button>
-											<button onClick={nextPage} disabled={currentPage === totalPages}
-												className="bg-sky-600 rounded-full px-4 py-1 text-white hover:bg-sky-500 transition duration-300 ease-in-out disabled:bg-gray-400 disabled:hover:bg-gray-400">Next</button>
-										</div>
-									</div>
-								}
+								<Pagination currentPage={currentPage} totalPages={totalPages}
+									nextPage={nextPage} prevPage={prevPage} />
 							</>) : (
 								<p className='w-full mt-6 mb-3 text-base text-center'>User has no articles...</p>
 							)}
