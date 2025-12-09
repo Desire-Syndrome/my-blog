@@ -4,14 +4,16 @@ import { assetsImages } from '../../assets/images-data'
 import { useState, useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { userUpdateAction, userDeleteAction, userLogoutAction } from "../../redux/actions/UserActions"
+import { userUpdateAction, userDeleteAction, userLogoutAction } from "../../redux/actions/userActions"
+
+import PopupDelete from "../../components/PopupDelete";
 
 
 const EditProfile = () => {
 
 	const dispatch = useDispatch();
 	const { loading: userUpdateLoading, error: userUpdateError, success: userUpdateSuccess } = useSelector((state) => state.userUpdateReducer);
-	const { error: userDeleteError, success: userDeleteSuccess } = useSelector((state) => state.userDeleteReducer);
+	const { loading: userDeleteLoading, error: userDeleteError, success: userDeleteSuccess } = useSelector((state) => state.userDeleteReducer);
 	const { userInfo } = useSelector((state) => state.userLoginReducer);
 
 	const [name, setName] = useState(userInfo.name);
@@ -141,31 +143,19 @@ const EditProfile = () => {
 				<button onClick={userDeleteHandler}
 					type="button" className="ms-5 font-medium text-center rounded px-5 md:px-8 py-3 text-gray-800 text-sm md:text-base bg-slate-200 hover:bg-gray-300 transition duration-300 ease-in-out">Delete Profile</button>
 			</div>
-		</form >
+		</form>
 
 
-		{modalVisible && (<>
-			<div onClick={() => { dispatch({ type: "USER_DELETE_RESET" }); setModalVisible(false); }} className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-				<div onClick={(e) => e.stopPropagation()} className="bg-white rounded-lg shadow-lg w-full max-w-md">
-					<div className="px-6 py-4 border-b border-gray-200"><h5 className="text-lg font-semibold text-sky-600">Confirmation</h5></div>
-					<div className="px-6 py-4"><p className="text-gray-700">{modalMessage}</p></div>
-					<div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
-
-						{!userDeleteSuccess ? (<>
-							<button onClick={() => { dispatch({ type: "USER_DELETE_RESET" }); setModalVisible(false); }}
-								type="button" className="text-sm font-medium px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 transition duration-300 ease-in-out">Cancel</button>
-							<button onClick={userConfirmDeleteHandler}
-								type="button" className="text-white text-sm font-medium px-4 py-2 rounded bg-sky-600 hover:bg-sky-500 transition duration-300 ease-in-out">Yes, Delete</button>
-						</>) : (
-							<button onClick={userAfterDeleteHandler}
-								type="button" className="text-white text-sm font-medium px-4 py-2 rounded bg-sky-600 hover:bg-sky-500 transition duration-300 ease-in-out">OK</button>
-						)}
-
-					</div>
-				</div>
-			</div>
-		</>)
-		}
+		<PopupDelete modalVisible={modalVisible} modalMessage={modalMessage} deleteSuccess={userDeleteSuccess} deleteLoading={userDeleteLoading}
+			onCancel={() => {
+				dispatch({ type: "USER_DELETE_RESET" });
+				setModalVisible(false);
+			}}
+			onConfirm={() => {
+				if (!userDeleteSuccess) { userConfirmDeleteHandler(); }
+				else { userAfterDeleteHandler(); }
+			}}
+		/>
 
 	</>)
 }
