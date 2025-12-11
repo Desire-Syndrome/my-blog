@@ -1,6 +1,7 @@
 
 const PopupDelete = ({
-	modalVisible, modalMessage, deleteSuccess, deleteLoading,
+	modalVisible, modalMessage, 
+	deleteSuccess, deleteLoading,
 	onCancel, onConfirm
 }) => {
 
