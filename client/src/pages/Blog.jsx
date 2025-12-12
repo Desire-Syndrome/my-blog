@@ -17,6 +17,9 @@ const Blog = () => {
 
 	const [searchParams, setSearchParams] = useSearchParams();
 
+	const dispatch = useDispatch();
+	const { loading: articlesGetAllLoading, articles = [], totalPages, totalArticles } = useSelector((state) => state.articlesGetAllReducer);
+
 	const [showFilters, setShowFilters] = useState(false);
 	const [selectedCategories, setSelectedCategories] = useState([]);
 
@@ -27,9 +30,6 @@ const Blog = () => {
 	const initialPage = Number(searchParams.get("page")) || 1;
 	const [currentPage, setCurrentPage] = useState(initialPage);
 	const articlesPerPage = 24;
-
-	const dispatch = useDispatch();
-	const { loading: articlesGetAllLoading, articles = [], totalPages, totalArticles } = useSelector((state) => state.articlesGetAllReducer);
 
 
 	useEffect(() => {

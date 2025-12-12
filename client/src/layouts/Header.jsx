@@ -51,6 +51,7 @@ const Header = () => {
 		}
 	}, [dispatch, email, password, userRegisterError, userRegisterSuccess, userLoginError, userLoginSuccess, userInfo]);
 
+	
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (popupState === "Login") {
@@ -59,6 +60,7 @@ const Header = () => {
 			dispatch(userRegisterAction(name, email, password, image));
 		}
 	};
+
 
 	const closePopup = () => {
 		setImage(null); setName(""); setEmail(""); setPassword("");

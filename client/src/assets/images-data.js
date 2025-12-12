@@ -21,7 +21,7 @@ import star from './images/star.png'
 export const assetsImages = {
     favicon, logo,
     upload_area, upload_area2, no_image,
-     person_icon, email_icon, lock_icon,
+    person_icon, email_icon, lock_icon,
     icon1, icon2, icon3, icon4, icon5, icon6, icon7,
     search_icon, cross_icon, star
 }

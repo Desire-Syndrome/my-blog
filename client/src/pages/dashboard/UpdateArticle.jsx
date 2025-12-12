@@ -164,18 +164,18 @@ const UpdateArticle = () => {
 				<div className='max-w-3xl w-full'>
 
 					{errorMessage && (
-						<div className="w-full mt-3 py-3 max-[500px]:text-xs text-sm lg:text-base text-center rounded-md bg-red-100 border border-red-400">
+						<div className="w-full mt-3 py-3 max-[500px]:text-xs text-sm lg:text-base text-center rounded-md bg-rose-100 border border-rose-400">
 							{errorMessage}
 						</div>
 					)}
 					{successMessage && (
-						<div className="w-full mt-3 py-3 max-[500px]:text-xs text-sm lg:text-base text-center rounded-md bg-blue-100 border border-blue-400">
+						<div className="w-full mt-3 py-3 max-[500px]:text-xs text-sm lg:text-base text-center rounded-md bg-sky-100 border border-sky-400">
 							{successMessage}
 						</div>
 					)}
 
 				</div>
-				<button disabled={articleUpdateLoading} type="submit" className="mt-4 bg-blue-600 rounded px-12 py-3 text-white hover:bg-blue-500 transition duration-300 ease-in-out">
+				<button disabled={articleUpdateLoading} type="submit" className="mt-4 bg-sky-600 rounded px-12 py-3 text-white hover:bg-sky-500 transition duration-300 ease-in-out">
 					{articleUpdateLoading ? "Loading..." : "Update Article"}
 				</button>
 			</form>

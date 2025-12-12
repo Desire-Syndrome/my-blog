@@ -26,8 +26,8 @@ const EditProfile = () => {
 	const [errorMessage, setErrorMessage] = useState("");
 	const [successMessage, setSuccessMessage] = useState("");
 
-	const [modalVisible, setModalVisible] = useState(false);
-	const [modalMessage, setModalMessage] = useState("");
+	const [modalConfirmVisible, setModalConfirmVisible] = useState(false);
+	const [modalConfirmMessage, setModalConfirmMessage] = useState("");
 
 
 	useEffect(() => {
@@ -49,9 +49,9 @@ const EditProfile = () => {
 			}, 3000);
 		}
 		if (userDeleteSuccess) {
-			setModalMessage("Your account has been successfully deleted!");
+			setModalConfirmMessage("Your account has been successfully deleted!");
 		} else if (userDeleteError) {
-			setModalMessage(userDeleteError);
+			setModalConfirmMessage(userDeleteError);
 		}
 	}, [dispatch, userUpdateError, userUpdateSuccess, userDeleteError, userDeleteSuccess, userInfo]);
 
@@ -70,8 +70,8 @@ const EditProfile = () => {
 
 
 	const userDeleteHandler = () => {
-		setModalMessage("Are you sure you want to delete your profile?");
-		setModalVisible(true);
+		setModalConfirmMessage("Are you sure you want to delete your profile?");
+		setModalConfirmVisible(true);
 	};
 
 	const userConfirmDeleteHandler = () => {
@@ -81,7 +81,7 @@ const EditProfile = () => {
 	const userAfterDeleteHandler = () => {
 		dispatch(userLogoutAction());
 		dispatch({ type: "USER_DELETE_RESET" });
-		setModalVisible(false);
+		setModalConfirmVisible(false);
 	};
 
 
@@ -146,10 +146,10 @@ const EditProfile = () => {
 		</form>
 
 
-		<PopupDelete modalVisible={modalVisible} modalMessage={modalMessage} deleteSuccess={userDeleteSuccess} deleteLoading={userDeleteLoading}
+		<PopupDelete modalVisible={modalConfirmVisible} modalMessage={modalConfirmMessage} deleteSuccess={userDeleteSuccess} deleteLoading={userDeleteLoading}
 			onCancel={() => {
 				dispatch({ type: "USER_DELETE_RESET" });
-				setModalVisible(false);
+				setModalConfirmVisible(false);
 			}}
 			onConfirm={() => {
 				if (!userDeleteSuccess) { userConfirmDeleteHandler(); }
