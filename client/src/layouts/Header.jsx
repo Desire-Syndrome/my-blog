@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 
 import { useDispatch, useSelector } from "react-redux";
-import { userRegisterAction, userLoginAction } from "../redux/actions/UserActions"
+import { userRegisterAction, userLoginAction } from "../redux/actions/userActions"
 
 import UserMenu from '../components/UserMenu'
 
@@ -84,7 +84,6 @@ const Header = () => {
 			</div>
 			<div className='lg:order-2 w-full lg:w-auto mt-4 lg:mt-0'><ul className='flex justify-center items-center font-semibold'>
 				<li><Link to={'/'} className='text-black md:text-lg text-md px-1 md:px-2 mx-2 hover:text-gray-600 transition duration-300 ease-in-out'>Home</Link></li>
-				<li><Link to={'/blog'} className='text-black md:text-lg text-md px-1 md:px-2 mx-2 hover:text-gray-600 transition duration-300 ease-in-out'>Articles</Link></li>
 				<li><Link to={'/faq'} className='text-black md:text-lg text-md px-1 md:px-2 mx-2 hover:text-gray-600 transition duration-300 ease-in-out'>Questions</Link></li>
 				<li><Link to={'/contacts'} className='text-black md:text-lg text-md px-1 md:px-2 mx-2 hover:text-gray-600 transition duration-300 ease-in-out'>Contacts</Link></li>
 			</ul></div>

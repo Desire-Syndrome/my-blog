@@ -84,7 +84,7 @@ const Article = () => {
 		dispatch({ type: "ARTICLE_DELETE_RESET" });
 		setModalConfirmVisible(false);
 		setArticleToDelete(null);
-		navigate('/blog');
+		navigate('/');
 	};
 
 

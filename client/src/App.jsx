@@ -4,7 +4,6 @@ import UseScrollToTop from "./hooks/useScrollToTop"
 
 import { useSelector } from "react-redux";
 
-import Home from './pages/Home'
 import Blog from './pages/Blog'
 import Article from './pages/Article'
 import Dashboard from './pages/Dashboard'
@@ -25,8 +24,7 @@ function App() {
     <Router>
       <UseScrollToTop />
       <Routes>
-        <Route exact path="/" element={<Home />}></Route>
-        <Route exact path="/blog" element={<Blog />}></Route>
+        <Route exact path="/" element={<Blog />}></Route>
         <Route exact path="/article/:id" element={<Article />}></Route>
         <Route exact path='/dashboard' element={userInfo ? <Dashboard /> : <Navigate to="/" />}>
           <Route exact path='new-article' element={<NewArticle />} />
