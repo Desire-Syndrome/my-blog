@@ -2,28 +2,37 @@ const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 import { assetsImages } from '../assets/images-data'
 
 import { useEffect, useState } from "react"
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 
 import { useDispatch, useSelector } from "react-redux";
-import { articleGetAction, articlesGetByUserAction } from "../redux/actions/articleActions"
+import { articleGetAction, articlesGetByUserAction, articleDeleteAction } from "../redux/actions/articleActions"
 import { userGetByIdAction } from "../redux/actions/userActions"
 
 import Layouts from '../layouts/Layouts'
 import PopupUserInfo from '../components/PopupUserInfo'
+import PopupDelete from "../components/PopupDelete";
 
 
 const Article = () => {
 
 	const { id } = useParams();
+	const navigate = useNavigate();
 
 	const dispatch = useDispatch();
 	const { loading: articleGetLoading, error: articleGetError, article } = useSelector((state) => state.articleGetReducer);
+	const { loading: articleDeleteLoading, success: articleDeleteSuccess, error: articleDeleteError } = useSelector((state) => state.articleDeleteReducer);
 	const { success: userGetByIdSuccess, error: userGetByIdError, user: userById } = useSelector((state) => state.userGetByIdReducer);
 	const { error: articlesGetByUserError, articles = [], totalPages } = useSelector((state) => state.articlesGetByUserReducer);
+	const { userInfo } = useSelector((state) => state.userLoginReducer);
 
 	const [selectedUserId, setSelectedUserId] = useState(null);
 
-	const [modalVisible, setModalVisible] = useState(false);
+	const [modalUserInfoVisible, setModalUserInfoVisible] = useState(false);
+
+	const [articleToDelete, setArticleToDelete] = useState(null);
+
+	const [modalConfirmVisible, setModalConfirmVisible] = useState(false);
+	const [modalConfirmMessage, setModalConfirmMessage] = useState("");
 
 	const [currentPage, setCurrentPage] = useState(1);
 	const articlesPerPage = 5;
@@ -35,23 +44,54 @@ const Article = () => {
 
 
 	useEffect(() => {
-		if (modalVisible && selectedUserId) {
+		if (modalUserInfoVisible && selectedUserId) {
 			dispatch(articlesGetByUserAction(selectedUserId, currentPage, articlesPerPage));
 		}
-	}, [modalVisible, selectedUserId, currentPage, dispatch]);
+	}, [modalUserInfoVisible, selectedUserId, currentPage, dispatch]);
 
 	const userGetByIdHandler = (userId) => {
 		setCurrentPage(1);
 		setSelectedUserId(userId);
 		dispatch(userGetByIdAction(userId));
-		setModalVisible(true);
+		setModalUserInfoVisible(true);
 	};
 
 	const closeModal = () => {
-		setModalVisible(false);
+		setModalUserInfoVisible(false);
 		dispatch({ type: "USER_GET_BY_ID_RESET" });
 		dispatch({ type: "ARTICLE_GET_BY_USER_RESET" });
 	}
+
+
+	useEffect(() => {
+		if (articleDeleteSuccess) {
+			setModalConfirmMessage("Article has been successfully deleted!");
+		} else if (articleDeleteError) {
+			setModalConfirmMessage(articleDeleteError);
+		}
+	}, [dispatch, articleDeleteSuccess, articleDeleteError]);
+
+	const articleDeleteHandler = () => {
+		setModalConfirmMessage("Are you sure you want to delete this article?");
+		setModalConfirmVisible(true);
+	};
+
+	const articleConfirmDeleteHandler = () => {
+		dispatch(articleDeleteAction(articleToDelete));
+	};
+
+	const articleAfterDeleteHandler = () => {
+		dispatch({ type: "ARTICLE_DELETE_RESET" });
+		setModalConfirmVisible(false);
+		setArticleToDelete(null);
+		navigate('/blog');
+	};
+
+
+	const articleUpdateHandler = (articleId) => {
+		dispatch(articleGetAction(articleId));
+		navigate("/dashboard/update-article");
+	};
 
 
 	const nextPage = () => {
@@ -95,6 +135,14 @@ const Article = () => {
 								)}
 							</div>
 							<p className="mt-3 md:mt-4 text-lg text-gray-500">Date: <span className='text-black'>{new Date(article.createdAt).toLocaleDateString("en-GB")}</span></p>
+							{userInfo?.isAdmin && (
+								<div className='mt-5 flex justify-center gap-2'>
+									<button onClick={() => articleUpdateHandler(article._id)}
+										className='bg-sky-600 rounded px-4 py-2 text-white hover:bg-sky-500 transition duration-300 ease-in-out'>Update</button>
+									<button onClick={() => { articleDeleteHandler(); setArticleToDelete(article._id); }}
+										className='bg-rose-600 rounded px-4 py-2 text-white hover:bg-rose-500 transition duration-300 ease-in-out'>Delete</button>
+								</div>
+							)}
 						</div>
 					</div>
 				</div>
@@ -105,8 +153,20 @@ const Article = () => {
 				</div>
 			</div>
 
-			<PopupUserInfo modalVisible={modalVisible} userById={userById} userGetByIdSuccess={userGetByIdSuccess} userGetByIdError={userGetByIdError} articles={articles} articlesGetByUserError={articlesGetByUserError} currentPage={currentPage} totalPages={totalPages}
+			<PopupUserInfo modalVisible={modalUserInfoVisible} userById={userById} userGetByIdSuccess={userGetByIdSuccess} userGetByIdError={userGetByIdError} articles={articles} articlesGetByUserError={articlesGetByUserError} currentPage={currentPage} totalPages={totalPages}
 				closeModal={closeModal} nextPage={nextPage} prevPage={prevPage} />
+
+			<PopupDelete modalVisible={modalConfirmVisible} modalMessage={modalConfirmMessage} deleteSuccess={articleDeleteSuccess} deleteLoading={articleDeleteLoading}
+			onCancel={() => {
+				setModalConfirmVisible(false);
+				dispatch({ type: "ARTICLE_DELETE_RESET" });
+				setArticleToDelete(null);
+			}}
+			onConfirm={() => {
+				if (!articleDeleteSuccess) { articleConfirmDeleteHandler(); }
+				else { articleAfterDeleteHandler(); }
+			}}
+		/>
 
 		</>) : (
 			<div className='mt-12 py-10 container px-4 2xl:px-20 mx-auto'>
