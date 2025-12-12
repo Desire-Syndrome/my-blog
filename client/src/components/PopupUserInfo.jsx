@@ -10,7 +10,7 @@ import Pagination from "../components/Pagination"
 const PopupUserInfo = ({
 	modalVisible,
 	userById, userGetByIdSuccess, userGetByIdError,
-	articles, articlesGetByUserError,
+	articles, articlesGetByUserError, articlesGetByUserLoading,
 	currentPage, totalPages,
 	nextPage, prevPage, closeModal
 }) => {
@@ -28,22 +28,24 @@ const PopupUserInfo = ({
 						<span className="mt-2 text-black text-xl md:text-2xl font-medium">{userById.name.length > 30 ? `${userById.name.slice(0, 10)}...` : userById.name}</span>
 					</div>
 					<h4 className='border-t border-b border-sky-300 py-2 mt-4 text-center font-medium text-lg text-gray-800'>User Articles</h4>
-					{articles.length > 0 ? (<>
-						<ul className='mt-2'>
-							{articles.map((article, i) => (
-								<li index={i} className='pt-1'>
-									<Link onClick={closeModal} to={`/article/${article._id}`} className='block text-sky-900 hover:text-sky-500 transition duration-300 ease-in-out' >
-										- {article.title.slice(0, 35)}
-									</Link>
-								</li>
-							))}
-						</ul>
+					{!articlesGetByUserLoading && (
+						articles.length > 0 ? (<>
+							<ul className='mt-2'>
+								{articles.map((article, i) => (
+									<li key={i} className='pt-1'>
+										<Link onClick={closeModal} to={`/article/${article._id}`} className='block text-sky-900 hover:text-sky-500 transition duration-300 ease-in-out' >
+											- {article.title.slice(0, 35)}
+										</Link>
+									</li>
+								))}
+							</ul>
 
-						<Pagination currentPage={currentPage} totalPages={totalPages}
-							nextPage={nextPage} prevPage={prevPage} />
+							<Pagination currentPage={currentPage} totalPages={totalPages}
+								nextPage={nextPage} prevPage={prevPage} />
 
-					</>) : (
-						<p className='w-full mt-6 mb-3 text-base text-center'>User has no articles...</p>
+						</>) : (
+							<p className='w-full mt-6 mb-3 text-base text-center'>User has no articles...</p>
+						)
 					)}
 
 					{articlesGetByUserError && (

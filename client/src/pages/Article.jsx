@@ -22,7 +22,7 @@ const Article = () => {
 	const { loading: articleGetLoading, error: articleGetError, article } = useSelector((state) => state.articleGetReducer);
 	const { loading: articleDeleteLoading, success: articleDeleteSuccess, error: articleDeleteError } = useSelector((state) => state.articleDeleteReducer);
 	const { success: userGetByIdSuccess, error: userGetByIdError, user: userById } = useSelector((state) => state.userGetByIdReducer);
-	const { error: articlesGetByUserError, articles = [], totalPages } = useSelector((state) => state.articlesGetByUserReducer);
+	const { loading: articlesGetByUserLoading, error: articlesGetByUserError, articles = [], totalPages } = useSelector((state) => state.articlesGetByUserReducer);
 	const { userInfo } = useSelector((state) => state.userLoginReducer);
 
 	const [selectedUserId, setSelectedUserId] = useState(null);
@@ -153,7 +153,7 @@ const Article = () => {
 				</div>
 			</div>
 
-			<PopupUserInfo modalVisible={modalUserInfoVisible} userById={userById} userGetByIdSuccess={userGetByIdSuccess} userGetByIdError={userGetByIdError} articles={articles} articlesGetByUserError={articlesGetByUserError} currentPage={currentPage} totalPages={totalPages}
+			<PopupUserInfo modalVisible={modalUserInfoVisible} userById={userById} userGetByIdSuccess={userGetByIdSuccess} userGetByIdError={userGetByIdError} articles={articles} articlesGetByUserError={articlesGetByUserError} articlesGetByUserLoading={articlesGetByUserLoading} currentPage={currentPage} totalPages={totalPages}
 				closeModal={closeModal} nextPage={nextPage} prevPage={prevPage} />
 
 			<PopupDelete modalVisible={modalConfirmVisible} modalMessage={modalConfirmMessage} deleteSuccess={articleDeleteSuccess} deleteLoading={articleDeleteLoading}
