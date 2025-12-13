@@ -4,7 +4,7 @@ const generateToken = require('../middleware/tokenGenerate');
 
 const { saveUploadedFile, deleteUploadedFile } = require('../middleware/multer.js');
 
-const { sendConfirmationEmail } = require('../middleware/emailService'); 
+const { sendConfirmationEmail } = require('../middleware/emailService');
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/User.js");
@@ -16,7 +16,7 @@ const userRegistration = AsyncHandler(async (req, res) => {
   if (!name || !email || !password) {
     return res.status(400).json({ message: "Missing details." });
   }
-  
+
   const existUser = await User.findOne({ email });
   if (existUser) {
     return res.status(400).json({ message: "User already exists." });
@@ -42,17 +42,17 @@ const userRegistration = AsyncHandler(async (req, res) => {
     image: avatarPath
   });
 
-	const confirmationToken = generateToken(user._id); 
-	await sendConfirmationEmail(user.email, confirmationToken);
+  const confirmationToken = generateToken(user._id);
+  await sendConfirmationEmail(user.email, confirmationToken);
 
   return res.status(201).json({
     _id: user._id,
     name: user.name,
     email: user.email,
-		confirmationToken: user.confirmationToken,
+    confirmationToken: user.confirmationToken,
     token: null,
     image: user.image || null,
-		isConfirmed: user.isConfirmed,
+    isConfirmed: user.isConfirmed,
     createdAt: user.createdAt
   });
 });
@@ -80,33 +80,33 @@ const userLogin = AsyncHandler(async (req, res) => {
 
 
 const userVerify = AsyncHandler(async (req, res) => {
-	const { token } = req.params; 
-  
-		try {
-			const decoded = jwt.verify(token, process.env.JWT_SECRET);
-			const user = await User.findById(decoded.id);
-			if (user) {
-				user.isConfirmed = true;
-				await user.save();
-				return res.status(200).json({ message: "Email confirmed successfully." });
-			} else {
-				return res.status(404).json({ message: "User not found." });
-			}
-		} catch (error) {
-			return res.status(400).json({ message: "Invalid or expired token." });
-		}
+  const { token } = req.params;
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+    if (user) {
+      user.isConfirmed = true;
+      await user.save();
+      return res.status(200).json({ message: "Email confirmed successfully." });
+    } else {
+      return res.status(404).json({ message: "User not found." });
+    }
+  } catch (error) {
+    return res.status(400).json({ message: "Invalid or expired token." });
+  }
 });
 
 
 const updateUser = AsyncHandler(async (req, res) => {
-  const  userId  = req.account._id;
+  const userId = req.account._id;
   const { name, email, oldPassword, newPassword } = req.body;
 
   const user = await User.findById(userId);
   if (user) {
     if (user.isBanned) {
-		  return res.status(403).json({ message: `You were banned until ${user.banExpiresAt.toLocaleString()}` });
-	  }
+      return res.status(403).json({ message: `You were banned until ${user.banExpiresAt.toLocaleString()}` });
+    }
 
     user.name = name || user.name;
 
@@ -163,14 +163,14 @@ const updateUser = AsyncHandler(async (req, res) => {
 
 
 const deleteUser = AsyncHandler(async (req, res) => {
-  const  userId  = req.account._id;
+  const userId = req.account._id;
 
   const user = await User.findById(userId);
 
   if (user) {
     if (user.isBanned) {
-		  return res.status(403).json({ message: `You were banned until ${user.banExpiresAt.toLocaleString()}` });
-	  }
+      return res.status(403).json({ message: `You were banned until ${user.banExpiresAt.toLocaleString()}` });
+    }
 
     if (user.image) {
       await deleteUploadedFile(user.image);
@@ -185,63 +185,71 @@ const deleteUser = AsyncHandler(async (req, res) => {
 
 
 const getUserById = AsyncHandler(async (req, res) => {
-  const  userId  = req.params.userId;
-  
-  const user = await User.findById(userId); 
+  const userId = req.params.userId;
 
-	if (user) {
-		return res.json({
-      _id: user._id, 
-			name: user.name,
-			isAdmin: user.isAdmin,
-			image: user.image || null,
+  const user = await User.findById(userId);
+
+  if (user) {
+    return res.json({
+      _id: user._id,
+      name: user.name,
+      isAdmin: user.isAdmin,
+      image: user.image || null,
       isBanned: user.isBanned,
-      banExpiresAt: user.banExpiresAt, 
-			createdAt: user.createdAt
-		});
-	} else {
-		return res.status(404).json({ message: "User not found." });
-	}
+      banExpiresAt: user.banExpiresAt,
+      createdAt: user.createdAt
+    });
+  } else {
+    return res.status(404).json({ message: "User not found." });
+  }
 });
 
 
 const banUser = AsyncHandler(async (req, res) => {
-	const userId = req.params.userId;
-	const { days } = req.body; 
+  if (!req.account || !req.account.isAdmin) {
+    return res.status(403).json({ message: "Admin access only." });
+  }
 
-	const user = await User.findById(userId);
-	if (!user) {
-		return res.status(404).json({ message: "User not found." });
-	}
+  const userId = req.params.userId;
+  const { days } = req.body;
 
-	const banDuration = Number(days) || 7; 
-	const banExpiresAt = new Date();
-	banExpiresAt.setDate(banExpiresAt.getDate() + banDuration);
+  const user = await User.findById(userId);
+  if (!user) {
+    return res.status(404).json({ message: "User not found." });
+  }
 
-	user.isBanned = true;
-	user.banExpiresAt = banExpiresAt;
-	await user.save();
-	return res.status(200).json({ message: `User banned for ${banDuration} day(s).` });
+  const banDuration = Number(days) || 7;
+  const banExpiresAt = new Date();
+  banExpiresAt.setDate(banExpiresAt.getDate() + banDuration);
+
+  user.isBanned = true;
+  user.banExpiresAt = banExpiresAt;
+  await user.save();
+  return res.status(200).json({ message: `User banned for ${banDuration} day(s).` });
 });
 
 
 const unbanUser = AsyncHandler(async (req, res) => {
-	const userId = req.params.userId;
+  if (!req.account || !req.account.isAdmin) {
+    return res.status(403).json({ message: "Admin access only." });
+  }
 
-	const user = await User.findById(userId);
-	if (!user) {
-		return res.status(404).json({ message: "User not found." });
-	}
+  const userId = req.params.userId;
 
-	user.isBanned = false;
-	user.banExpiresAt = null;
-	await user.save();
-	return res.status(200).json({ message: "User unbanned successfully." });
+  const user = await User.findById(userId);
+  if (!user) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  user.isBanned = false;
+  user.banExpiresAt = null;
+  await user.save();
+  return res.status(200).json({ message: "User unbanned successfully." });
 });
 
 
-module.exports = { 
-  userRegistration, userLogin, userVerify, 
+module.exports = {
+  userRegistration, userLogin, userVerify,
   updateUser, deleteUser, getUserById,
   banUser, unbanUser
 };
