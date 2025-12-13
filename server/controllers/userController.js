@@ -194,7 +194,9 @@ const getUserById = AsyncHandler(async (req, res) => {
       _id: user._id, 
 			name: user.name,
 			isAdmin: user.isAdmin,
-			image: user.image || null, 
+			image: user.image || null,
+      isBanned: user.isBanned,
+      banExpiresAt: user.banExpiresAt, 
 			createdAt: user.createdAt
 		});
 	} else {
