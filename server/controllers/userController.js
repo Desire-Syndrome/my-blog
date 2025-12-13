@@ -191,6 +191,7 @@ const getUserById = AsyncHandler(async (req, res) => {
 
 	if (user) {
 		return res.json({
+      _id: user._id, 
 			name: user.name,
 			isAdmin: user.isAdmin,
 			image: user.image || null, 
