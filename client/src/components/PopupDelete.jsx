@@ -14,6 +14,7 @@ const PopupDelete = ({
 					<div className="px-6 py-4 border-b border-gray-200"><h5 className="text-lg font-semibold text-sky-600">Confirmation</h5></div>
 					<div className="px-6 py-4"><p className="text-gray-700">{modalMessage}</p></div>
 					<div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+						
 						{!deleteSuccess ? (<>
 							<button onClick={onCancel} disabled={deleteLoading}
 								type="button" className="text-sm font-medium px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 transition duration-300 ease-in-out">Cancel</button>
@@ -23,6 +24,7 @@ const PopupDelete = ({
 							<button onClick={onConfirm}
 								type="button" className="text-white text-sm font-medium px-4 py-2 rounded bg-sky-600 hover:bg-sky-500 transition duration-300 ease-in-out">OK</button>
 						)}
+						
 					</div>
 				</div>
 			</div>

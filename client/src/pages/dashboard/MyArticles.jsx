@@ -104,6 +104,7 @@ const MyArticles = () => {
 
 			{!articlesGetByUserLoading && (
 				articles.length > 0 ? (<>
+
 					<h2 className='mb-2 font-medium  text-gray-800 text-base md:text-lg'>Published articles: {totalArticles ? totalArticles : "0"}</h2>
 					{articles.map((article, i) => (
 						<div key={i} className='flex items-center py-4 border-t border-sky-200 first-of-type:border-none'>
@@ -135,7 +136,8 @@ const MyArticles = () => {
 					))}
 
 					<Pagination currentPage={currentPage} totalPages={totalPages}
-						nextPage={nextPage} prevPage={prevPage} />
+						nextPage={nextPage} prevPage={prevPage} 
+					/>
 
 				</>) : (
 					<p className='text-base'>You haven't written any articles yet.</p>
@@ -143,11 +145,12 @@ const MyArticles = () => {
 			)}
 
 			{articlesGetByUserError && (
-				<p className="w-full mt-3 py-3 max-[500px]:text-xs text-sm lg:text-base text-center rounded-md bg-rose-100 border border-rose-300">{articlesGetByUserError}</p>
+				<p className="w-full mt-3 py-3 text-sm text-center rounded-md bg-rose-100 border border-rose-300">
+					{articlesGetByUserError}
+				</p>
 			)}
 
 		</section>
-
 
 		<PopupDelete modalVisible={modalConfirmVisible} modalMessage={modalConfirmMessage} deleteSuccess={articleDeleteSuccess} deleteLoading={articleDeleteLoading}
 			onCancel={() => {

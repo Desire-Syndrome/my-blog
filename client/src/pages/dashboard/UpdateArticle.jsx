@@ -106,14 +106,17 @@ const UpdateArticle = () => {
 		!articleGetLoading && (
 			<form onSubmit={articleUpdateHandler} className='container py-8 flex flex-col w-full items-start gap-3'>
 				<div className='w-full max-w-3xl'>
+
 					{userInfo.isAdmin ? (<>
 						<p className='mb-2'>Title</p>
 						<input onChange={e => setTitle(e.target.value)} value={title} type="text" placeholder="" className='w-full max-w-3xl py-2 border-2 border-gray-300' required />
 					</>) : (
 						<p className='text-lg font-medium text-gray-800'>{title}</p>
 					)}
+
 				</div>
 				<div className='max-w-3xl mt-3 w-full flex flex-col md:flex-row justify-between items-center'>
+				
 					{userInfo.isAdmin ? (
 						<div className='w-full md:w-5/12 bg-sky-100 py-4 rounded-lg'>
 							<label htmlFor="image">
@@ -137,7 +140,9 @@ const UpdateArticle = () => {
 							<img src={previewImage} alt="Article image" className='w-52 h-28 mx-auto object-cover block border border-sky-300' />
 						</div>
 					)}
+
 					<div className='w-full md:w-6/12 mt-8 md:mt-0'>
+
 						{userInfo.isAdmin ? (<>
 							<p className='mb-2'>Description</p>
 							<textarea onChange={e => setShortText(e.target.value)} value={shortText} rows="3" type="text" placeholder="" className='w-full max-w-3xl py-2 border-2 border-gray-300' />
@@ -147,6 +152,7 @@ const UpdateArticle = () => {
 						</>) : (
 							<p>{shortText.slice(0, 150)}</p>
 						)}
+
 					</div>
 				</div>
 				<div className='max-w-3xl w-full'>
@@ -154,24 +160,26 @@ const UpdateArticle = () => {
 					<div className='my-quil' ref={editorRef}></div>
 				</div>
 				<div className='flex gap-2 w-full max-w-3xl mt-4 items-center'>
+
 					<p className='w-36'>Change category</p>
 					<select onChange={e => setCategory(e.target.value)} value={category} className='x-3 py-2 border-2 border-gray-300'>
 						{articlesCategories.map((category, i) => (
 							<option value={category} key={i}>{category}</option>
 						))}
 					</select>
+
 				</div>
 				<div className='max-w-3xl w-full'>
 
 					{errorMessage && (
-						<div className="w-full mt-3 py-3 max-[500px]:text-xs text-sm lg:text-base text-center rounded-md bg-rose-100 border border-rose-400">
+						<p className="w-full mt-3 py-3 text-sm text-center rounded-md bg-rose-100 border border-rose-300">
 							{errorMessage}
-						</div>
+						</p>
 					)}
 					{successMessage && (
-						<div className="w-full mt-3 py-3 max-[500px]:text-xs text-sm lg:text-base text-center rounded-md bg-sky-100 border border-sky-400">
+						<p className="w-full mt-3 py-3 text-sm text-center rounded-md bg-sky-100 border border-sky-400">
 							{successMessage}
-						</div>
+						</p>
 					)}
 
 				</div>

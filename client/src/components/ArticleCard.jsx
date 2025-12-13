@@ -15,6 +15,7 @@ const ArticleCard = ({ article }) => {
 				<p className="text-sm text-gray-500">Category: <span className='text-black'>{article.category}</span></p>
 				<p className="text-sm text-gray-500">Date: <span className='text-black'>{new Date(article.createdAt).toLocaleDateString("en-GB")}</span></p>
 			</div>
+
 			{article.image ? (
 				<div className="mt-2">
 					<img src={`${BASE_URL}${article.image}`} className="h-48 md:h-40 w-full object-cover" alt="Article image" />
@@ -24,13 +25,16 @@ const ArticleCard = ({ article }) => {
 					<img src={assetsImages.no_image} className="h-48 md:h-40 w-full object-cover" alt="Article image" />
 				</div>
 			)}
+
 			<h3 className="font-medium text-xl mt-2">{article.title}</h3>
 			<div className='mt-4 h-[60px] sm:h-[80px] md:h-[60px] overflow-hidden'>
+
 			{article.shortText ? (
 				<p className="text-gray-500 text-sm">{article.shortText.slice(0, 150)}</p>
 			) : (
 				<p dangerouslySetInnerHTML={{ __html: article.fullText.slice(0, 150) }} className="text-gray-500 text-sm"></p>
 			)}
+
 			</div>
 			<div className="mt-4 flex items-center justify-center">
 				<p className='me-2 text-sm'>Rating:</p>

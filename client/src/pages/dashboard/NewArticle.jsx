@@ -107,24 +107,26 @@ const NewArticle = () => {
 				<div className='my-quil' ref={editorRef}></div>
 			</div>
 			<div className='flex gap-2 w-full max-w-3xl mt-4 items-center'>
+				
 				<p className='w-20'>Category</p>
 				<select onChange={e => setCategory(e.target.value)} className='x-3 py-2 border-2 border-gray-300'>
 					{articlesCategories.map((category, i) => (
 						<option value={category} key={i}>{category}</option>
 					))}
 				</select>
+
 			</div>
 			<div className='max-w-3xl w-full'>
 
 				{errorMessage && (
-					<div className="w-full mt-3 py-3 max-[500px]:text-xs text-sm lg:text-base text-center rounded-md bg-rose-100 border border-rose-400">
+					<p className="w-full mt-3 py-3 text-sm text-center rounded-md bg-rose-100 border border-rose-300">
 						{errorMessage}
-					</div>
+					</p>
 				)}
 				{successMessage && (
-					<div className="w-full mt-3 py-3 max-[500px]:text-xs text-sm lg:text-base text-center rounded-md bg-sky-100 border border-sky-400">
+					<p className="w-full mt-3 py-3 text-sm text-center rounded-md bg-sky-100 border border-sky-400">
 						{successMessage}
-					</div>
+					</p>
 				)}
 
 			</div>

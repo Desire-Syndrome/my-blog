@@ -105,6 +105,7 @@ const Blog = () => {
 
 		<div className='container 2xl:px-20 mx-auto flex flex-col lg:flex-row max-lg:space-y-8 py-8 b'>
 			<div className='w-full lg:w-1/5 bg-white px-4'>
+
 				{(isSearched && searchByTitle !== "") && (
 					<div><h3 className='font-medium text-md mb-3'>Title:</h3><div className='mb-2 text-gray-400'>
 						<span className='inline-flex items-center gap-2.5 ml-1 mr-1 text-gray-700 bg-sky-100 border border-sky-200 px-4 py-1.5 rounded'>
@@ -113,6 +114,7 @@ const Blog = () => {
 						</span>
 					</div></div>
 				)}
+
 				<button onClick={() => setShowFilters(prev => !prev)} className='lg:hidden block mt-4 px-6 py-1.5 rounded border border-gray-600 hover:bg-sky-100 transition duration-300 ease-in-out'>
 					{showFilters ? "Close Filters" : "Open Filters"}
 				</button>
@@ -127,21 +129,26 @@ const Blog = () => {
 						))}
 					</ul>
 				</div>
+
 			</div>
 
 			<section className='w-full lg:w-4/5 text-gray-800 max-lg:px-4'>
 				<h3 id='job-list' className='font-medium text-3xl py-2'>Latest articles</h3>
 				<p className='mb-8'>Explore articles to suit every taste</p>
-				
+
 				{!articlesGetAllLoading && (
 					articles.length > 0 ? (<>
+
 						<div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4'>
 							{articles.map((article, i) => (
 								<ArticleCard key={i} article={article} />
 							))}
 						</div>
+
 						<Pagination currentPage={currentPage} totalPages={totalPages}
-					nextPage={nextPage} prevPage={prevPage} />
+							nextPage={nextPage} prevPage={prevPage}
+						/>
+
 					</>) : (
 						<p>Nothing found, please change your search criteria...</p>
 					)

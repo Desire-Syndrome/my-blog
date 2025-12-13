@@ -51,7 +51,7 @@ const Header = () => {
 		}
 	}, [dispatch, email, password, userRegisterError, userRegisterSuccess, userLoginError, userLoginSuccess, userInfo]);
 
-	
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (popupState === "Login") {
@@ -64,7 +64,7 @@ const Header = () => {
 
 	const closePopup = () => {
 		setImage(null); setName(""); setEmail(""); setPassword("");
-		setPopupState("Login"); setShowPopup(false); 
+		setPopupState("Login"); setShowPopup(false);
 	}
 
 	return (<>
@@ -82,11 +82,13 @@ const Header = () => {
 				</>)}
 
 			</div>
-			<div className='lg:order-2 w-full lg:w-auto mt-4 lg:mt-0'><ul className='flex justify-center items-center font-semibold'>
-				<li><Link to={'/'} className='text-black md:text-lg text-md px-1 md:px-2 mx-2 hover:text-gray-600 transition duration-300 ease-in-out'>Home</Link></li>
-				<li><Link to={'/faq'} className='text-black md:text-lg text-md px-1 md:px-2 mx-2 hover:text-gray-600 transition duration-300 ease-in-out'>Questions</Link></li>
-				<li><Link to={'/contacts'} className='text-black md:text-lg text-md px-1 md:px-2 mx-2 hover:text-gray-600 transition duration-300 ease-in-out'>Contacts</Link></li>
-			</ul></div>
+			<div className='lg:order-2 w-full lg:w-auto mt-4 lg:mt-0'>
+				<ul className='flex justify-center items-center font-semibold'>
+					<li><Link to={'/'} className='text-black md:text-lg text-md px-1 md:px-2 mx-2 hover:text-gray-600 transition duration-300 ease-in-out'>Home</Link></li>
+					<li><Link to={'/faq'} className='text-black md:text-lg text-md px-1 md:px-2 mx-2 hover:text-gray-600 transition duration-300 ease-in-out'>Questions</Link></li>
+					<li><Link to={'/contacts'} className='text-black md:text-lg text-md px-1 md:px-2 mx-2 hover:text-gray-600 transition duration-300 ease-in-out'>Contacts</Link></li>
+				</ul>
+			</div>
 		</div></div>
 
 
@@ -127,11 +129,6 @@ const Header = () => {
 							<button type='submit' className='bg-sky-600 w-full text-white rounded-full py-2 mt-3 hover:bg-sky-500 transition duration-300 ease-in-out'>
 								{userLoginLoading ? "Loading..." : "Login"}
 							</button>
-							{errorMessage && (
-								<div className="mt-3 rounded-md bg-rose-100 border border-rose-300  px-4 py-3 text-sm text-center">
-									{errorMessage}
-								</div>
-							)}
 							<p className='text-center text-sm mt-5'>Don’t have an account?
 								<span onClick={() => setPopupState("Registration")} className='text-sky-600 cursor-pointer ms-2'>Registration</span>
 							</p>
@@ -139,16 +136,17 @@ const Header = () => {
 							<button type='submit' className='bg-sky-600 w-full text-white rounded-full py-2 mt-3 hover:bg-sky-500 transition duration-300 ease-in-out'>
 								{userRegisterLoading ? "Loading..." : "Submit"}
 							</button>
-							{errorMessage && (
-								<div className="mt-3 rounded-md bg-rose-100 border border-rose-300  px-4 py-3 text-sm text-center">
-									{errorMessage}
-								</div>
-							)}
 							<p className='text-center text-sm mt-5'>Already have an account?
 								<span onClick={() => setPopupState("Login")} className='text-sky-700 cursor-pointer ms-2 '>Login</span>
 							</p>
 						</>)}
-						
+
+						{errorMessage && (
+							<p className="w-full mt-3 py-3 text-sm text-center rounded-md bg-rose-100 border border-rose-300">
+								{errorMessage}
+							</p>
+						)}
+
 					</form>
 				</div></div>
 		)}

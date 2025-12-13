@@ -127,14 +127,14 @@ const EditProfile = () => {
 			</div>
 
 			{errorMessage && (
-				<div className="w-full mt-3 py-3 max-[500px]:text-xs text-sm lg:text-base text-center rounded-md bg-rose-100 border border-rose-300">
+				<p className="w-full mt-3 py-3 text-sm text-center rounded-md bg-rose-100 border border-rose-300">
 					{errorMessage}
-				</div>
+				</p>
 			)}
 			{successMessage && (
-				<div className="w-full mt-3 py-3 max-[500px]:text-xs text-sm lg:text-base text-center rounded-md bg-sky-100 border border-sky-400">
+				<p className="w-full mt-3 py-3 text-sm text-center rounded-md bg-sky-100 border border-sky-400">
 					{successMessage}
-				</div>
+				</p>
 			)}
 
 			<div className='mt-5 flex items-center'>

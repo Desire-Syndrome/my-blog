@@ -23,7 +23,7 @@ function UserMenu() {
 			<p className='text-sm md:text-base'>Welcome, {userInfo.name.length > 10 ? `${userInfo.name.slice(0, 10)}...` : userInfo.name}</p>
 			<div className='relative group'>
 				<img src={userInfo.image ? `${BASE_URL}${userInfo.image}` : assetsImages.upload_area} className='w-8 h-8 object-cover rounded-full border border-sky-300' alt="User Avatar" />
-				<div className='absolute hidden group-hover:block top-0 right-0 z-10 text-black rounded pt-12'>
+				<div className='absolute hidden group-hover:block top-0 right-0 z-10 text-black rounded pt-12'>	
 					<ul className='list-none m-0 p-2 bg-white rounded-md border text-sm w-max shadow-sm shadow-black'>
 						<li><Link to={'/'} className='py-1 px-2 cursor-pointer flex items-center gap-2 hover:bg-sky-200 transition duration-300 ease-in-out'>
 							<img src={assetsImages.icon1} className='w-4 h-4' alt="icon" />Back to Website
