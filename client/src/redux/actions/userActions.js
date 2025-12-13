@@ -221,7 +221,7 @@ try {
 			headers: { Authorization: `Bearer ${userInfo.token}` }
 		};
 
-		const { data } = await axios.put(`${BASE_URL}/api/user/unban/${id}`, config)
+		const { data } = await axios.put(`${BASE_URL}/api/user/unban/${id}`, null, config)
 		dispatch({
 			type: USER_UNBAN_SUCCESS,
 			payload: data.message,
