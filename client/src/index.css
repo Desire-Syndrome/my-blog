@@ -2,7 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-.my-quil.ql-container {height: 300px;}
+
+/* Hide input number arrows */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield; 
+}
+
 
 /*************************************************/
 @layer base { html{scroll-behavior: auto;} }
@@ -14,6 +24,8 @@ input.no-focus:focus {
   box-shadow: none;
 }
 
+.my-quil.ql-container {height: 300px;}
+
 .rich-text p, .ql-editor p {margin: 16px 0 !important; font-size: 15px; color: #333333;}
 .rich-text h1, .ql-editor h1 {font-size: 36px; font-weight: 800; color: #252525; margin: 16px 0 !important;;}
 .rich-text h2, .ql-editor h2 {font-size: 22px; font-weight: 700; color: #252525; margin: 16px 0 !important;;}
@@ -24,3 +36,7 @@ input.no-focus:focus {
 .rich-text strong {font-weight: 700;}
 .rich-text ul, .rich-text ol {list-style: circle; margin-left: 30px;}
 .rich-text li {margin: 8px 0;}
+
+
+
+
