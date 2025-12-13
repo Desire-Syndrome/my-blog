@@ -206,6 +206,30 @@ try {
 }
 
 
-export const userUnbanAction = (id) => async (dispatch) => {
+export const userUnbanAction = (id) => async (dispatch, getState) => {
+try {
+		dispatch({
+			type: USER_UNBAN_REQ
+		});
 
+		const userInfo = getState().userLoginReducer.userInfo;
+		if (!userInfo || !userInfo.token) {
+			throw new Error("User not authenticated");
+		}
+
+		const config = {
+			headers: { Authorization: `Bearer ${userInfo.token}` }
+		};
+
+		const { data } = await axios.put(`${BASE_URL}/api/user/unban/${id}`, config)
+		dispatch({
+			type: USER_UNBAN_SUCCESS,
+			payload: data.message,
+		});
+	} catch (error) {
+		dispatch({
+			type: USER_UNBAN_FAIL,
+			payload: error.response && error.response.data.message ? error.response.data.message : error.message
+		});
+	}
 }
